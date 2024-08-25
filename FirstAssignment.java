@@ -8,8 +8,8 @@
  *	To compile MS Powershell:	javac -cp ".;mvAcm.jar" FirstAssignment.java
  *	To execute MS Powershell:	java -cp ".;mvAcm.jar" FirstAssignment
  *
- *	@author	Your name
- *	@since	Today's date
+ *	@author	William Liu
+ *	@since	8/23/24
  */
 import java.awt.Font;
 
@@ -67,23 +67,27 @@ public class FirstAssignment extends GraphicsProgram {
     	s10.setFont(f);
     	add(s10);
 
-        GLabel s11 = new GLabel("When we were tired from basketball, we often went to 711 to get refreshments and snacks for energy.")
+        GLabel s11 = new GLabel("When we were tired from basketball, we often went to 711 to get refreshments and snacks for energy.", 10, 240)
         s11.setFont(f);
         add(s11);
+
+        GLabel s16 = new GLabel("One of the best things to get from 711 is the ice cream. My very favorite was the ice cream sandwich", 10, 260);
+        s16.setFont(f);
+        add(s16);
         
-    	GLabel s12 = new GLabel("When we were done with basketball, we often hung out at each other's houses and played video games.", 10, 260);
+    	GLabel s12 = new GLabel("When we were done with basketball, we often hung out at each other's houses and played video games.", 10, 280);
         s12.setFont(f);
         add(s12);
         
-        GLabel s13 = new GLabel("We played games like Fortnite and Super Smash Bros, and we tried out many new games we found online.", 10, 280);
+        GLabel s13 = new GLabel("We played games like Fortnite and Super Smash Bros, and we tried out many new games we found online.", 10, 300);
         s13.setFont(f);
         add(s13);
         
-        GLabel s14 = new GLabel("It was a great way to relax and have fun after studying and after doing the many many many classes.", 10, 300);
+        GLabel s14 = new GLabel("It was a great way to relax and have fun after studying and after doing the many many many classes.", 10, 320);
         s14.setFont(f);
         add(s14);
         
-        GLabel s15 = new GLabel("Overall, this summer was a mix of learning, playing, and spending time with my friends and family.", 10, 320);
+        GLabel s15 = new GLabel("Overall, this summer was a mix of learning, playing, and spending time with my friends and family.", 10, 340);
         s15.setFont(f);
         add(s15);
 
