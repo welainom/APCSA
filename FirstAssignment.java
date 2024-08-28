@@ -27,23 +27,23 @@ public class FirstAssignment extends GraphicsProgram {
     	s1.setFont(f);
     	add(s1);
     	
-    	GLabel s2 = new GLabel("My summer vacation was very very very very fun. I spent lots of time with my friends and family.", 10, 40);
+    	GLabel s2 = new GLabel("My summer vacation was very very very very fun. I spent time with my friends and my family.", 10, 40);
     	s2.setFont(f);
     	add(s2);
     	
-    	GLabel s3 = new GLabel("I also took a class or two or three or four to learn more. I also did a couple of summer programs.", 10, 60);
+    	GLabel s3 = new GLabel("I also took a class or two or three or four to learn more. Also, I attended a few fun programs.", 10, 60);
     	s3.setFont(f);
     	add(s3);
     	
-    	GLabel s4 = new GLabel("One of my programs was an engineering one, where I built a robot. The robot followed a ball around.", 10, 80);
+    	GLabel s4 = new GLabel("One of my programs was an engineering one, where I built a robot. The robot followed a ball.", 10, 80);
     	s4.setFont(f);
     	add(s4);
 
-        GLabel s5 = new GLabel("You could also control it using bluetooth. I also broadcast the video  from its camera to a server", 10, 100);
-    	s5.setFont(f);
-    	add(s5);
+        GLabel s25 = new GLabel("You could also control it using bluetooth. I also put the video from its camera to a web server", 10, 100);
+    	s25.setFont(f);
+    	add(s25);
         
-    	GLabel s5 = new GLabel("Another was a program about statistics and data science. It was from the Wharton Business School.", 10, 120);
+    	GLabel s5 = new GLabel("Another was a program about statistics, data science. It was from the Wharton Business School.", 10, 120);
     	s5.setFont(f);
     	add(s5);
     	
@@ -55,11 +55,11 @@ public class FirstAssignment extends GraphicsProgram {
     	s7.setFont(f);
     	add(s7);
     	
-    	GLabel s8 = new GLabel("I think the food there is just okay, but what makes it very fun is hanging out with your friends.", 10, 180);
+    	GLabel s8 = new GLabel("I  think the  food there is just okay, but what makes it very fun is hanging out with my friends.", 10, 180);
     	s8.setFont(f);
     	add(s8);
     	
-    	GLabel s9 = new GLabel("Other than going to restaurants, me and my friends played a large amount of basketball together. ", 10, 200);
+    	GLabel s9 = new GLabel("Other  than  going to restaurants,  me and my friends played quite a lot of basketball together. ", 10, 200);
     	s9.setFont(f);
     	add(s9);
     	
@@ -67,27 +67,27 @@ public class FirstAssignment extends GraphicsProgram {
     	s10.setFont(f);
     	add(s10);
 
-        GLabel s11 = new GLabel("When we were tired from basketball, we often went to 711 to get refreshments and snacks for energy.", 10, 240)
+        GLabel s11 = new GLabel("When we were tired from basketball, we went to 711 to get refreshments and snacks for energy.", 10, 240);
         s11.setFont(f);
         add(s11);
 
-        GLabel s16 = new GLabel("One of the best things to get from 711 is the ice cream. My very favorite was the ice cream sandwich", 10, 260);
+        GLabel s16 = new GLabel("One of the best things to get from 711 is the ice cream. My very veryfavorite was the ice cream. ", 10, 260);
         s16.setFont(f);
         add(s16);
         
-    	GLabel s12 = new GLabel("When we were done with basketball, we often hung out at each other's houses and played video games.", 10, 280);
+    	GLabel s12 = new GLabel("When we were done with basketball, we often hung out at each other's houses and played games.", 10, 280);
         s12.setFont(f);
         add(s12);
         
-        GLabel s13 = new GLabel("We played games like Fortnite and Super Smash Bros, and we tried out many new games we found online.", 10, 300);
+        GLabel s13 = new GLabel("We played games like Fortnite and Super Smash Bros, and tried out many new games we found.", 10, 300);
         s13.setFont(f);
         add(s13);
         
-        GLabel s14 = new GLabel("It was a great way to relax and have fun after studying and after doing the many many many classes.", 10, 320);
+        GLabel s14 = new GLabel("It was a great way to relax and have fun after studying and after doing the many  many classes.", 10, 320);
         s14.setFont(f);
         add(s14);
         
-        GLabel s15 = new GLabel("Overall, this summer was a mix of learning, playing, and spending time with my friends and family.", 10, 340);
+        GLabel s15 = new GLabel("Overall,this summer was a mix of learning, playing, and spending time with friends and family.", 10, 340);
         s15.setFont(f);
         add(s15);
 
