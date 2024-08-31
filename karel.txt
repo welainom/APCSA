@@ -7,16 +7,28 @@ F5 = pickBeeper();
 F6 = dropBeeper();
 */
 
-void layAndRemoveTiles()
+void fetchTheStars()
 {
-    go();
+    repeat (10) {
+        turnLeft();
+        go();
+        dropBeeper();
+        turnLeft();
+        if (frontIsClear()) {
+            moveForward();
+        }
+    }
 }
 
 void go() {
-    if (!frontIsClear() || beeperAhead()) {
-        turnLeft();
+    if (!beeperAhead()) {
+        moveForward();
+        go();
     }
-    dropBeeper();
+    else {
+        moveForward();
+        pickBeeper();
+        turnAround();
+    }
     moveForward();
-    go();
 }
