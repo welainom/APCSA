@@ -7,11 +7,9 @@ import java.util.ArrayList;
  *	@since	September 4, 2024
  */
 
-
 public class USMap {
-	private ArrayList<Double> cities_x = new ArrayList<>();
-	private ArrayList<Double> cities_y = new ArrayList<>();
-	private ArrayList<String> city_names = new ArrayList<>();
+	private ArrayList<City> cities = new ArrayList<>();
+	
 	public static void main(String[] args) {
 		USMap map = new USMap();
 		map.readCities();
@@ -26,15 +24,13 @@ public class USMap {
 			String first, second;
 			first = line.substring(0, 5);
 			second = line.substring(6, 11);
-			
-			cities_x.add(Double.parseDouble(first));
-			cities_y.add(Double.parseDouble(second));
-			city_names.add(line.substring(12));
+			City temp = new City(Double.parseDouble(first), Double.parseDouble(second), line.substring(12));
+			cities.add(temp);
 		}
-		
-		for (int i = 0; i<cities_x.size(); i++) {
-			System.out.println(cities_x.get(i) + " " + cities_y.get(i));
-		}
+/*
+		for (int i = 0; i<cities.size(); i++) {
+			System.out.println(cities.get(i).getX() + " " + cities.get(i).getY() + " " + cities.get(i).getName());
+		}*/
 	}
 	
 	public void setupCanvas() {
@@ -42,5 +38,34 @@ public class USMap {
 		StdDraw.setCanvasSize(900, 512);
 		StdDraw.setXscale(128.0, 65.0);
 		StdDraw.setYscale(22.0, 52.0);
+		StdDraw.setPenColor(StdDraw.GRAY);
+		StdDraw.setPenRadius(0.006);
+		
+		for (int i = 0; i<cities.size(); i++) {
+			StdDraw.point(cities.get(i).getY(), cities.get(i).getX());
+		}
+	}
+}
+
+class City {
+	private double x, y;
+	private String name;
+	
+	public City(double x, double y, String name) {
+		this.x = x;
+		this.y = y;
+		this.name = name;
+	}
+	
+	public double getX() {
+		return this.x;
+	}
+	
+	public double getY() {
+		return this.y;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 }
