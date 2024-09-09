@@ -16,8 +16,8 @@ public class USMap {
 	}
 	
 	public void readCities() {
-		// Change this name in Geany
-		Scanner input = FileUtils.openToRead("src/cities.txt");
+		// Method to read in city coordinates, name, and population
+		Scanner input = FileUtils.openToRead("cities.txt");
 		
 		while (input.hasNext()) {
 			String line = input.nextLine();
@@ -28,8 +28,7 @@ public class USMap {
 			cities.add(temp);
 		}
 
-		// Change this name in Geany
-		input = FileUtils.openToRead("src/bigCities.txt");
+		input = FileUtils.openToRead("bigCities.txt");
 		int cnt = 1;
 		while (input.hasNext()) {
 			String line = input.nextLine();
@@ -44,7 +43,22 @@ public class USMap {
 			cnt++;
 		}
 		setupCanvas();
-		
+		draw();
+		input.close();
+	}
+	
+	public void setupCanvas() {
+		// Setting up Canvas for drawing
+		StdDraw.setTitle("USMap");
+		StdDraw.setCanvasSize(900, 512);
+		StdDraw.setXscale(128.0, 65.0);
+		StdDraw.setYscale(22.0, 52.0);
+		StdDraw.setPenColor(StdDraw.GRAY);
+		StdDraw.setPenRadius(0.006);
+	}
+	
+	public void draw() {
+		// method to draw the cities
 		for (int i = 0; i<cities.size(); i++) {
 			City c = cities.get(i);
 			if (c.getPopulation() != 0) {
@@ -62,15 +76,6 @@ public class USMap {
 			}
 			StdDraw.point(cities.get(i).getY(), cities.get(i).getX());
 		}
-	}
-	
-	public void setupCanvas() {
-		StdDraw.setTitle("USMap");
-		StdDraw.setCanvasSize(900, 512);
-		StdDraw.setXscale(128.0, 65.0);
-		StdDraw.setYscale(22.0, 52.0);
-		StdDraw.setPenColor(StdDraw.GRAY);
-		StdDraw.setPenRadius(0.006);
 	}
 }
 
