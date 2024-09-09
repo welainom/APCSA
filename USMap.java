@@ -13,24 +13,55 @@ public class USMap {
 	public static void main(String[] args) {
 		USMap map = new USMap();
 		map.readCities();
-		map.setupCanvas();
 	}
 	
 	public void readCities() {
-		Scanner input = FileUtils.openToRead("cities.txt");
+		// Change this name in Geany
+		Scanner input = FileUtils.openToRead("src/cities.txt");
 		
 		while (input.hasNext()) {
 			String line = input.nextLine();
 			String first, second;
 			first = line.substring(0, 5);
 			second = line.substring(6, 11);
-			City temp = new City(Double.parseDouble(first), Double.parseDouble(second), line.substring(12));
+			City temp = new City(Double.parseDouble(first), Double.parseDouble(second), line.substring(12), 0, false);
 			cities.add(temp);
 		}
-/*
+
+		// Change this name in Geany
+		input = FileUtils.openToRead("src/bigCities.txt");
+		int cnt = 1;
+		while (input.hasNext()) {
+			String line = input.nextLine();
+			
+			for (City c : cities) {
+				int idx = line.indexOf(c.getName());
+				if (idx != -1) {
+					if (cnt <= 10) c.setTopTen(true);
+					c.setPopulation(Integer.parseInt(line.substring(idx + c.getName().length() + 1)));
+				}
+			}
+			cnt++;
+		}
+		setupCanvas();
+		
 		for (int i = 0; i<cities.size(); i++) {
-			System.out.println(cities.get(i).getX() + " " + cities.get(i).getY() + " " + cities.get(i).getName());
-		}*/
+			City c = cities.get(i);
+			if (c.getPopulation() != 0) {
+				StdDraw.setPenRadius(0.6 * (Math.sqrt(c.getPopulation())/18500));
+				if (c.getTopTen()) {
+					StdDraw.setPenColor(StdDraw.RED);
+				}
+				else {
+					StdDraw.setPenColor(StdDraw.BLUE);
+				}
+			}
+			else {
+				StdDraw.setPenColor(StdDraw.GRAY);
+				StdDraw.setPenRadius(0.006);
+			}
+			StdDraw.point(cities.get(i).getY(), cities.get(i).getX());
+		}
 	}
 	
 	public void setupCanvas() {
@@ -40,21 +71,21 @@ public class USMap {
 		StdDraw.setYscale(22.0, 52.0);
 		StdDraw.setPenColor(StdDraw.GRAY);
 		StdDraw.setPenRadius(0.006);
-		
-		for (int i = 0; i<cities.size(); i++) {
-			StdDraw.point(cities.get(i).getY(), cities.get(i).getX());
-		}
 	}
 }
 
 class City {
 	private double x, y;
 	private String name;
+	private int population;
+	private boolean topTen;
 	
-	public City(double x, double y, String name) {
+	public City(double x, double y, String name, int population, boolean topTen) {
 		this.x = x;
 		this.y = y;
 		this.name = name;
+		this.population = population;
+		this.topTen = topTen;
 	}
 	
 	public double getX() {
@@ -68,4 +99,20 @@ class City {
 	public String getName() {
 		return this.name;
 	}
-}
+	
+	public void setPopulation(int population) {
+		this.population = population;
+	}
+	
+	public int getPopulation() {
+		return this.population;
+	}
+	
+	public boolean getTopTen() {
+		return this.topTen;
+	}
+	
+	public void setTopTen(boolean b) {
+		this.topTen = b;
+	}
+ }
