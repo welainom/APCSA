@@ -8,7 +8,72 @@
 public class PigGame {
 	public static void main(String[] args) {
 		PigGame p = new PigGame();
-		p.playGame();
+		char choice = Prompt.getChar("Play game or statistics (p or s)");
+		if (choice == 'p') {
+			p.playGame();
+		}
+		else {
+			p.runStatistics();
+		}
+	}
+	
+	public int runTurn() {
+		int turnScore = 0;
+		while (turnScore < 20) {
+			Dice d = new Dice();
+			d.roll();
+			int score = d.getValue();
+			if (score == 1) {
+				turnScore = 0;
+				break;
+			}
+			else {
+				turnScore += score;
+			}
+		}
+		
+		return turnScore;
+	}
+	
+	public void runStatistics() {
+		int numTurns = Prompt.getInt("Number of turns (1000 - 1000000)", 1000, 1000000);
+		int num0 = 0, num20 = 0, num21 = 0, num22 = 0, num23 = 0, num24 = 0, num25 = 0;
+	
+		for (int i = 0; i<numTurns; i++) {
+			int turnScore = runTurn();
+			switch (turnScore) {
+				case 0:
+					num0++;
+					break;
+				case 20:
+					num20++;
+					break;
+				case 21:
+					num21++;
+					break;
+				case 22:
+					num22++;
+					break;
+				case 23:
+					num23++;
+					break;
+				case 24:
+					num24++;
+					break;
+				case 25:
+					num25++;
+					break;
+			}
+		}
+		System.out.println("      Estimated");
+		System.out.println("Score Probability");
+		System.out.printf("0      %.5f \n", (double) num0/numTurns);
+		System.out.printf("20      %.5f \n", (double) num20/numTurns);
+		System.out.printf("21      %.5f \n", (double) num21/numTurns);
+		System.out.printf("22      %.5f \n", (double) num22/numTurns);
+		System.out.printf("23      %.5f \n", (double) num23/numTurns);
+		System.out.printf("24      %.5f \n", (double) num24/numTurns);
+		System.out.printf("25      %.5f \n", (double) num25/numTurns);
 	}
 	
 	public void playGame() {
@@ -71,8 +136,11 @@ public class PigGame {
 			}
 		}
 		
+		if (computerScore >= 100) {
+			System.out.println("Computer Wins.");
+		}
 		if (playerScore >= 100) {
-			
+			System.out.println("You Win.");
 		}
 	}
 	
