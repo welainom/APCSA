@@ -9,7 +9,11 @@ import java.io.PrintWriter;
  *	@since	
  */
 public class MVCipher {
-	
+	private final int UPPERCASE_MIN = 65;
+	private final int UPPERCASE_MAX = 90;
+	private final int LOWERCASE_MIN = 97;
+	private final int LOWERCASE_MAX = 122;
+	private final int NUM_LETTERS = 26;
 	// fields go here
 		
 	/** Constructor */
@@ -37,21 +41,29 @@ public class MVCipher {
 		
 		int choice = Prompt.getInt("Encrypt or Decrypt?", 1, 2);
 		System.out.println(choice);	
-			
-		/* Prompt for an input file name */
 		
-		String inFile = Prompt.getString("Name of file to encrypt");
+		String choicePrompt;
+		if (choice == 1) choicePrompt = "Name of file to encrypt";
+		else choicePrompt = "Name of file to decrypt";
+			
+		String inFile = Prompt.getString(choicePrompt);
 		Scanner input = FileUtils.openToRead(inFile);
 		
-		/* Prompt for an output file name */
-		
-		String outFile = Prompt.getString("Name of file to decrypt");
+		String outFile = Prompt.getString("Name of file to output to");
 		PrintWriter output = FileUtils.openToWrite(outFile);	
 		
-		/* Read input file, encrypt or decrypt, and print to output file */
-		
-		
-		/* Don't forget to close your output file */
+		if (choice == 1) {
+			while (input.hasNext()) {
+				String line = input.nextLine();
+				output.println(encryptString(line, key));
+			}
+		}
+		else {
+			while (input.hasNext()) {
+				String line = input.nextLine();
+				output.println(decryptString(line, key));
+			}
+		}
 	}
 	
 	public String getKey() {
@@ -72,30 +84,51 @@ public class MVCipher {
 		return key;
 	}
 	
-	public String encryptString(String key, String line) {
+	public String encryptString(String line, String key) {
 		String result = "";
 		for (int i = 0; i<line.length(); i++) {
-			char c = line.charAt(i);
-			if (65 <= c && c <= 90) {
-				if ((c + result.charAt(i % key.length())) > 90) {
-					result += (char) (65 + (90 - (c + result.charAt(i % key.length()))));
-				}
-				else {
-					result += (char) c + result.charAt(i % key.length());
-				}
-			}
-			else if (97 <= c && c <= 122) {
-				if ((c + result.charAt(i % key.length())) > 122) {
-					result += (char) (97 + (122 - (c + result.charAt(i % key.length()))));
-				}
-				else {
-					result += (char) c + result.charAt(i % key.length());
-				}
-			}
-			else {
-				result += c;
-			}
+			char lineChar = line.charAt(i);
+			char keyChar = key.charAt(i % key.length());
+			
+			result += encryptChar(lineChar, keyChar);
 		}
 		return result;
+	}
+	
+	public char encryptChar(char lineChar, char keyChar) {
+		int shift = (int) (keyChar - UPPERCASE_MIN + 1);
+		int charNum;
+		char result;
+		if (LOWERCASE_MIN <= lineChar && lineChar <= LOWERCASE_MAX) {
+			charNum = (int) (lineChar - LOWERCASE_MIN + 1);
+			if (charNum + shift > NUM_LETTERS) {
+				result = (char) (LOWERCASE_MIN + (charNum + shift - NUM_LETTERS));
+			}
+			else {
+				result = (char) (LOWERCASE_MIN + charNum + shift);
+			}
+		}
+		else if (UPPERCASE_MIN <= lineChar && lineChar <= UPPERCASE_MAX) {
+			charNum = (int) (lineChar - UPPERCASE_MIN + 1);
+			if (charNum + shift > NUM_LETTERS) {
+				result = (char) (UPPERCASE_MIN + (charNum + shift - NUM_LETTERS));
+			}
+			else {
+				result = (char) (UPPERCASE_MIN + charNum + shift);
+			}
+		}
+		else {
+			result = (char) (lineChar + 1);
+		}
+		
+		return (char) (result - 1);
+	}
+	
+	public String decryptString(String key, String line) {
+		return "";
+	}
+	
+	public char decryptChar(char lineChar, char keyChar) {
+		return 'z';
 	}
 }
