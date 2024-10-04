@@ -1,8 +1,8 @@
 /**
  *	Plays the game of MasterMind.
  *	<Describe the game here>
- *	@author
- *	@since
+ *	@author	William Liu	
+ *	@since	September 27, 2024
  */
 
 public class MasterMind {
@@ -48,30 +48,33 @@ public class MasterMind {
 		printIntroduction();
 		
 		String s = Prompt.getString("Hit the Enter key to start the game ->");
-		int guessNum = 0;
+		int guessNum = -1;
 		
-		while (!isFinished(guessNum) && guessNum < 10) {
+		while (guessNum < 10 && !isFinished(guessNum)) {
+			guessNum++;
 			String guess = "";
 			while (!guessWorks(guess.toUpperCase())) {
 				guess = Prompt.getString("Enter the code using (A,B,C,D,E,F). For example, ABCD or abcd from left-to-right");
 				guess.toUpperCase();
 			}
-			
+			System.out.println(isFinished(guessNum));
 			for (int i = 0; i<4; i++) {
 				guesses[guessNum].getPeg(i).setLetter((char) (guess.charAt(i) - 32));
 			}
 			int temp1 = guesses[guessNum].getPartialMatches(master);
 			int temp2 = guesses[guessNum].getExactMatches(master);
 			
+			System.out.print("Guess: ");
 			for (int i = 0; i<PEGS_IN_CODE; i++) {
 				System.out.print(guesses[guessNum].getPeg(i).getLetter());
 			}
 			System.out.println("");
+			System.out.print("Master: ");
 			for (int i = 0; i<4; i++) {
 				System.out.print(master.getPeg(i).getLetter());
 			}
 			System.out.println("");
-/*			for (int i = 0 ;i<MAX_GUESSES; i++) {
+			/*for (int i = 0 ;i<MAX_GUESSES; i++) {
 				PegArray p = guesses[i];
 				for (int j = 0; j<4; j++) {
 					System.out.print(p.getPeg(j).getLetter());
@@ -80,45 +83,27 @@ public class MasterMind {
 			}
 			*/
 			printBoard();
-			System.out.println(guesses[guessNum].getPartial());
-			guessNum++;
 		}
-		
-		
-		
-/*		PegArray test = new PegArray(4);
-		Peg[] p = new Peg[4];
-		for (int i = 0; i<4; i++) {
-			Peg temp = new Peg((char)(65 + (int) (Math.random() * 6)));
-			p[i] = temp;
-		}
-		test.setPegArray(p);
-		
-		for (int i = 0; i<PEGS_IN_CODE; i++) {
-			System.out.println(master.getPeg(i).getLetter());
-		}
-		System.out.println("");
-		for (int i = 0; i<PEGS_IN_CODE; i++) {
-			System.out.println(test.getPeg(i).getLetter() + " " + master.getPeg(i).getLetter());
-		}
-		System.out.println(test.getPartialMatches(master));
-		System.out.println(test.getExactMatches(master));
-		*/
+		reveal = true;
+		printBoard();
+		System.out.printf("\n\nYou won in %d turns \n\n", guessNum + 1);
 	}
 
 	public boolean isFinished(int guess) {
+		if (guess == -1) return false;
 		PegArray g = guesses[guess];
 		
-		for (int i = 0; i<4; i++) {
+		for (int i = 0; i < PEGS_IN_CODE; i++) {
 			Peg p1 = g.getPeg(i);
 			Peg p2 = master.getPeg(i);
-			
+
 			if (p1.getLetter() != p2.getLetter()) {
 				return false;
 			}
 		}
 		return true;
 	}
+
 
 	public boolean guessWorks(String guess) {
 		if (guess.length() != 4) return false;

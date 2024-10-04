@@ -1,8 +1,8 @@
 /**
  *  This class creates and manages one array of pegs from the game MasterMind.
  *
- *  @author
- *  @since
+ *  @author	William Liu
+ *  @since	September 27, 2024
 */
 
 public class PegArray {
@@ -49,14 +49,15 @@ public class PegArray {
 	 *	@return			The number of exact matches
 	 */
 	public int getExactMatches(PegArray master) {
-		int result = 0;
-		for (int i = 0; i<pegs.length; i++) {
+		exactMatches = 0;
+		
+		for (int i = 0; i < pegs.length; i++) {
 			if (master.getPeg(i).getLetter() == pegs[i].getLetter()) {
-				result++;
-			} 
+				exactMatches++;
+			}
 		}
-		exactMatches = result;
-		return result;
+		
+		return exactMatches;
 	}
 	
 	/**
@@ -66,18 +67,30 @@ public class PegArray {
 	 *	@return			The number of partial matches
 	 */
 	public int getPartialMatches(PegArray master) {
-		int result = 0;
-		int[] matched = {0, 0, 0, 0};
-		for (int i = 0; i<pegs.length; i++) {
-			for (int j = 0; j<pegs.length; j++) {
-				if ((pegs[i].getLetter() == master.getPeg(j).getLetter() && i != j && matched[i] == 0)) {
-					result++;
-					matched[i] = 1;
+		partialMatches = 0;
+		boolean[] masterMatched = {false, false, false, false}; 
+		boolean[] guessMatched = {false, false, false, false}; 
+		
+		for (int i = 0; i < pegs.length; i++) {
+			if (master.getPeg(i).getLetter() == pegs[i].getLetter()) {
+				guessMatched[i] = true;
+				masterMatched[i] = true; 
+			}
+		}
+
+		for (int i = 0; i < pegs.length; i++) {
+			if (!guessMatched[i]) { 
+				for (int j = 0; j < pegs.length; j++) {
+					if (!masterMatched[j] && pegs[i].getLetter() == master.getPeg(j).getLetter()) {
+						partialMatches++;
+						masterMatched[j] = true;
+						break; 
+					}
 				}
 			}
 		}
-		partialMatches = result;
-		return result;
+		
+		return partialMatches;
 	}
 	
 	// Accessor methods
