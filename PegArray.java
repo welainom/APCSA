@@ -36,6 +36,11 @@ public class PegArray {
 	 */
 	public Peg getPeg(int n) { return pegs[n]; }
 	
+	/**
+	 * 	Sets the peg array to a new peg array
+	 * 	
+	 * 	@param p	The new peg array
+	 */
 	public void setPegArray(Peg[] p) {
 		for (int i = 0; i<4; i++) {
 			pegs[i] = p[i];
@@ -51,6 +56,7 @@ public class PegArray {
 	public int getExactMatches(PegArray master) {
 		exactMatches = 0;
 		
+		// Find exact matches. if two chars in the same position are the same, increment
 		for (int i = 0; i < pegs.length; i++) {
 			if (master.getPeg(i).getLetter() == pegs[i].getLetter()) {
 				exactMatches++;
@@ -68,9 +74,12 @@ public class PegArray {
 	 */
 	public int getPartialMatches(PegArray master) {
 		partialMatches = 0;
+		
+		// Arrays to track which have been matched
 		boolean[] masterMatched = {false, false, false, false}; 
 		boolean[] guessMatched = {false, false, false, false}; 
 		
+		// Mark exact matches first
 		for (int i = 0; i < pegs.length; i++) {
 			if (master.getPeg(i).getLetter() == pegs[i].getLetter()) {
 				guessMatched[i] = true;
@@ -78,9 +87,12 @@ public class PegArray {
 			}
 		}
 
+		// Match and find number of partial matches
 		for (int i = 0; i < pegs.length; i++) {
 			if (!guessMatched[i]) { 
 				for (int j = 0; j < pegs.length; j++) {
+					
+					// If has not been matched already 
 					if (!masterMatched[j] && pegs[i].getLetter() == master.getPeg(j).getLetter()) {
 						partialMatches++;
 						masterMatched[j] = true;
