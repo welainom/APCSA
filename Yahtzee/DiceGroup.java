@@ -22,6 +22,10 @@ public class DiceGroup {
 		}
 	}
 	
+	public Dice[] getDie() {
+		return die;
+	}
+	
 	/**	you complete */
 	public void rollDice() { 
 		for (int i = 0; i<NUM_DICE; i++) {
