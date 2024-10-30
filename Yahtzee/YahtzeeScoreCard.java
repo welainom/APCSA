@@ -6,13 +6,16 @@ import java.util.ArrayList;
 
 public class YahtzeeScoreCard {
 	private int[] scores;
+	private boolean[] scored;
 	private final int NUM_SCORES = 13;
 	private final int NUM_DICE = 5;
 	
 	public YahtzeeScoreCard() {
 		scores = new int[NUM_SCORES];
+		scored = new boolean[NUM_SCORES];
 		for (int i = 0; i<NUM_SCORES; i++) {
 			scores[i] = -1;
+			scored[i] = false;
 		}
 	}
 	
@@ -44,6 +47,8 @@ public class YahtzeeScoreCard {
 	}
 
 	public int getScore(int type) {return scores[type - 1];}
+
+	public boolean beenScored(int type) {return scored[type - 1];}
 
 	/**
 	 *  Change the scorecard based on the category choice 1-13.
@@ -97,6 +102,7 @@ public class YahtzeeScoreCard {
 			if (d.getValue() == choice) totalScore += choice;
 		}
 		scores[choice - 1] = totalScore;
+		scored[choice - 1] = true;
 	}
 	
 	/**
@@ -122,6 +128,7 @@ public class YahtzeeScoreCard {
 		}
 		if (works) scores[6] = totalScore;
 		else scores[6] = 0;
+		scored[6] = true;
 	}
 	
 	public void fourOfAKind(DiceGroup dg) {
@@ -142,6 +149,7 @@ public class YahtzeeScoreCard {
 		}
 		if (works) scores[7] = totalScore;
 		else scores[7] = 0;
+		scored[7] = true;
 	}
 	
 	public void fullHouse(DiceGroup dg) {
@@ -162,6 +170,7 @@ public class YahtzeeScoreCard {
 		}
 		if (containsThree && containsTwo) scores[8] = 25;
 		else scores[8] = 0;
+		scored[8] = true;
 	}
 	
 	public void smallStraight(DiceGroup dg) {
@@ -182,6 +191,7 @@ public class YahtzeeScoreCard {
 		
 		if (works) scores[9] = 30;
 		else scores[9] = 0;
+		scored[9] = true;
 	}
 	
 	public void largeStraight(DiceGroup dg) {
@@ -203,6 +213,7 @@ public class YahtzeeScoreCard {
 		
 		if (works) scores[10] = 40;
 		else scores[10] = 0;
+		scored[10] = true;
 	}
 	
 	public void chance(DiceGroup dg) {
@@ -211,6 +222,7 @@ public class YahtzeeScoreCard {
 		for (Dice d : dg.getDice()) totalScore += d.getValue();
 		
 		scores[11] = totalScore;
+		scored[11] = true;
 	}
 	
 	public void yahtzeeScore(DiceGroup dg) {
@@ -221,5 +233,6 @@ public class YahtzeeScoreCard {
 		
 		if (works) scores[12] = 50;
 		else scores[12] = 0; 
+		scored[12] = true;
 	}
 }
