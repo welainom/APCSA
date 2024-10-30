@@ -1,4 +1,9 @@
-	
+import java.util.HashMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.List;
+import java.util.ArrayList;
+
 public class YahtzeeScoreCard {
 	private int[] scores;
 	private final int NUM_SCORES = 13;
@@ -38,7 +43,7 @@ public class YahtzeeScoreCard {
 						"---------------------------+\n");
 	}
 
-	public int getScore(int type) return scores[type - 1];
+	public int getScore(int type) {return scores[type - 1];}
 
 	/**
 	 *  Change the scorecard based on the category choice 1-13.
@@ -49,7 +54,7 @@ public class YahtzeeScoreCard {
 	 */
 	public boolean changeScore(int choice, DiceGroup dg) {
 		if (scores[choice - 1] == -1 && (1 <= choice && choice <= 13)) {
-			switch(choice):
+			switch(choice) {
 				case 7:
 					threeOfAKind(dg);
 					break;
@@ -74,8 +79,10 @@ public class YahtzeeScoreCard {
 				default:
 					numberScore(choice, dg);
 					break;
+			}
+			return true;
 		}
-		else return false;
+		return false;
 	}
 	
 	/**
@@ -86,10 +93,10 @@ public class YahtzeeScoreCard {
 	 */
 	public void numberScore(int choice, DiceGroup dg) {
 		int totalScore = 0;
-		for (Dice d : dg.getDie()) {
-			if (d.getValue == choice) totalScore += choice;
+		for (Dice d : dg.getDice()) {
+			if (d.getValue() == choice) totalScore += choice;
 		}
-		return choice;
+		scores[choice - 1] = totalScore;
 	}
 	
 	/**
@@ -97,17 +104,122 @@ public class YahtzeeScoreCard {
 	 *
 	 *	@param dg	The DiceGroup to score
 	 */	
-	public void threeOfAKind(DiceGroup dg) {}
+	public void threeOfAKind(DiceGroup dg) {
+		int totalScore = 0;
+		boolean works = false;
+		for (int i = 1; i<=6; i++) {
+			int numMatching = 0;
+			for (Dice d : dg.getDice()) {
+				if (d.getValue() == i) numMatching++;
+			}
+			if (numMatching >= 3) {
+				works = true;
+				break;
+			}
+		}
+		for (Dice d : dg.getDice()) {
+			totalScore += d.getValue();
+		}
+		if (works) scores[6] = totalScore;
+		else scores[6] = 0;
+	}
 	
-	public void fourOfAKind(DiceGroup dg) {}
+	public void fourOfAKind(DiceGroup dg) {
+		int totalScore = 0;
+		boolean works = false;
+		for (int i = 1; i<=6; i++) {
+			int numMatching = 0;
+			for (Dice d : dg.getDice()) {
+				if (d.getValue() == i) numMatching++;
+			}
+			if (numMatching >= 4) {
+				works = true;
+				break;
+			}
+		}
+		for (Dice d : dg.getDice()) {
+			totalScore += d.getValue();
+		}
+		if (works) scores[7] = totalScore;
+		else scores[7] = 0;
+	}
 	
-	public void fullHouse(DiceGroup dg) {}
+	public void fullHouse(DiceGroup dg) {
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for (Dice d : dg.getDice()) {
+			int value = d.getValue();
+			if (map.containsKey(value)) {
+				map.put(value, map.get(value) + 1);
+			}
+			else map.put(value, 1);
+		}
+		
+		boolean containsThree = false;
+		boolean containsTwo = false;
+		for (int key : map.keySet()) {
+			if (map.get(key) == 3) containsThree = true;
+			if (map.get(key) == 2) containsTwo = true;
+		}
+		if (containsThree && containsTwo) scores[8] = 25;
+		else scores[8] = 0;
+	}
 	
-	public void smallStraight(DiceGroup dg) {}
+	public void smallStraight(DiceGroup dg) {
+		SortedSet<Integer> set = new TreeSet<>();
+		
+		for (Dice d : dg.getDice()) {
+			set.add(d.getValue());
+		}
 	
-	public void largeStraight(DiceGroup dg) {}
+		List<Integer> list = new ArrayList(set);
+		boolean works = false;
+		
+		for (int i = 0; i<list.size() - 3; i++) {
+			if (list.get(i + 3) == list.get(i + 2) + 1 &&
+				list.get(i + 2) == list.get(i + 1) + 1 &&
+				list.get(i + 1) == list.get(i) + 1) works = true;
+		}
+		
+		if (works) scores[9] = 30;
+		else scores[9] = 0;
+	}
 	
-	public void chance(DiceGroup dg) {}
+	public void largeStraight(DiceGroup dg) {
+		SortedSet<Integer> set = new TreeSet<>();
+		
+		for (Dice d : dg.getDice()) {
+			set.add(d.getValue());
+		}
 	
-	public void yahtzeeScore(DiceGroup dg) {}
+		List<Integer> list = new ArrayList(set);
+		boolean works = false;
+		
+		for (int i = 0; i<list.size() - 4; i++) {
+			if (list.get(i + 4) ==  list.get(i + 3) + 1 &&
+				list.get(i + 3) == list.get(i + 2) + 1 &&
+				list.get(i + 2) == list.get(i + 1) + 1 &&
+				list.get(i + 1) == list.get(i) + 1) works = true;
+		}
+		
+		if (works) scores[10] = 40;
+		else scores[10] = 0;
+	}
+	
+	public void chance(DiceGroup dg) {
+		int totalScore = 0;
+		
+		for (Dice d : dg.getDice()) totalScore += d.getValue();
+		
+		scores[11] = totalScore;
+	}
+	
+	public void yahtzeeScore(DiceGroup dg) {
+		int first = dg.getDice()[0].getValue();
+		boolean works = true;
+		
+		for (Dice d : dg.getDice()) if (d.getValue() != first) works = false;
+		
+		if (works) scores[12] = 50;
+		else scores[12] = 0; 
+	}
 }

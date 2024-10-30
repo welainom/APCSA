@@ -22,14 +22,10 @@ public class DiceGroup {
 		}
 	}
 	
-	public Dice[] getDie() {
-		return die;
-	}
-	
 	/**	you complete */
 	public void rollDice() { 
 		for (int i = 0; i<NUM_DICE; i++) {
-			dice[i].roll();
+			die[i].roll();
 		}
 	}
 	
@@ -43,7 +39,8 @@ public class DiceGroup {
 	public void rollDice(String rawHold) { 
 		for (int i = 0; i<NUM_DICE; i++) {
 			boolean hold = false;
-			for (char c : rawHold) {
+			for (int j = 0; j<rawHold.length(); j++) {
+				char c = rawHold.charAt(j);
 				if ((int)(c - '0') == (i + 1)) {
 					hold = true;
 				}
@@ -54,12 +51,15 @@ public class DiceGroup {
 		}
 	}
 	
+	public Dice[] getDice() {return die;}
+	
 	/**	getters - you complete */
 	
 	/**	@return the total value of the DiceGroup - you complete */
 	public int getTotal() { 
 		int total = 0;
 		for (Dice d : die) total += d.getValue();
+		return total;
 	}
 	
 	/**

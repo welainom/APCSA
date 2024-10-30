@@ -1,3 +1,129 @@
+public class Yahtzee {	
+	private YahtzeePlayer playerOne, playerTwo;
+	private int turn;
+	private DiceGroup dice;
+	
+	public Yahtzee() {
+		playerOne = new YahtzeePlayer();
+		playerTwo = new YahtzeePlayer();
+		dice = new DiceGroup();
+	}
+	
+	public static void main(String[] args) {
+		Yahtzee y = new Yahtzee();
+		y.run();
+	}
+	
+	public void run() {
+		printHeader();
+		
+		decideTurns();
+		
+		int round = 1;
+		while (!gameEnd(round)) {
+			System.out.println("Round " + round + " of 13 rounds.");
+			
+			runPlayerTurn(turn);
+			turn = 3 - turn;
+			runPlayerTurn(turn);
+			turn = 3 - turn;
+			round++;
+		}
+	}
+	
+	public void runPlayerTurn(int turn) {
+		dice.rollDice();
+		String name;
+		if (turn == 1) name = playerOne.getName();
+		else name = playerTwo.getName();
+		
+		Prompt.getString(name + ", it's your turn to play. Please hit enter to roll the dice ");
+		dice.printDice();
+		
+		String hold = getHold();
+		
+		int numRolls = 1;
+		while (!hold.equals("-1") && numRolls < 3) {
+			dice.rollDice(hold);
+			dice.printDice();
+			hold = getHold();
+			numRolls++;
+		}
+		dice.printDice();
+		
+		if (turn == 1) {
+			playerOne.getScoreCard().printCardHeader();
+			playerOne.getScoreCard().printPlayerScore(playerOne);
+			
+			int choice = Prompt.getInt(name + ", now you need to make a choice. Pick a valid integer from the list above (1-13)", 1, 13);
+			playerOne.getScoreCard().changeScore(choice, dice);
+			
+			playerOne.getScoreCard().printCardHeader();
+			playerOne.getScoreCard().printPlayerScore(playerOne);
+		}
+		else {
+			playerTwo.getScoreCard().printCardHeader();
+			playerTwo.getScoreCard().printPlayerScore(playerTwo);
+			
+			int choice = Prompt.getInt(name + ", now you need to make a choice. Pick a valid integer from the list above (1-13)", 1, 13);
+			playerTwo.getScoreCard().changeScore(choice, dice);
+			
+			playerTwo.getScoreCard().printCardHeader();
+			playerTwo.getScoreCard().printPlayerScore(playerTwo);
+		}
+	}
+	
+	public String getHold() {
+		String hold = "";
+		while (!holdWorks(hold)) {
+			hold = Prompt.getString("Which di(c)e would you like to keep? Enter the values you'd" + 
+				" like to \'hold\' without spaces. For example, if you'd like to \'hold\' die 1, 2, and 5, " + 
+				"enter 125 (enter -1 if you'd like to end the turn)");
+		}
+		return hold;
+	}
+	
+	public boolean holdWorks(String hold) {
+		if (hold.length() < 1 || hold.length() > 6) return false;
+		if (hold.equals("-1")) return true;
+		for (int i = 0; i<hold.length(); i++) {
+			char c = hold.charAt(i);
+			
+			if (c < '1' || c > '6') return false;
+		}
+		return true;
+	}
+	
+	public boolean gameEnd(int round) {
+		if (round > 13) return true;
+		else return false;
+	}
+	
+	public void decideTurns() {
+		playerOne.setName(Prompt.getString("Player 1, please enter your name."));
+		playerTwo.setName(Prompt.getString("Player 2, please enter your name."));
+		
+		int aRoll, bRoll;
+		
+		Prompt.getString("Let's see who will go first. " + playerOne.getName() + ", please hit enter to roll the dice");
+		dice.rollDice();
+		dice.printDice();
+		aRoll = dice.getTotal();
+		
+		Prompt.getString(playerTwo.getName() + ", it's your turn. Please hit enter to roll the dice");
+		dice.rollDice();
+		dice.printDice();
+		bRoll = dice.getTotal();
+		
+		if (aRoll > bRoll) turn = 1;
+		else turn = 2;
+		
+		System.out.println(playerOne.getName() + ", you rolled a sum of " + aRoll + 
+							", and " + playerTwo.getName() + ", you rolled a sum of " + bRoll);
+		
+		if (turn == 1) System.out.println(playerOne.getName() + ", since your sum was higher, you'll roll first.");
+		else System.out.println(playerTwo.getName() + ", since your sum was higher, you'll roll first.");
+	}
 	
 	public void printHeader() {
 		System.out.println("\n");
@@ -20,3 +146,4 @@
 		System.out.println("+------------------------------------------------------------------------------------+");
 		System.out.println("\n\n");
 	}
+}
