@@ -1,8 +1,3 @@
-import java.util.HashMap;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.List;
-import java.util.ArrayList;
 
 public class YahtzeeScoreCard {
 	private int[] scores;
@@ -153,68 +148,57 @@ public class YahtzeeScoreCard {
 	}
 	
 	public void fullHouse(DiceGroup dg) {
-		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-		for (Dice d : dg.getDice()) {
-			int value = d.getValue();
-			if (map.containsKey(value)) {
-				map.put(value, map.get(value) + 1);
-			}
-			else map.put(value, 1);
-		}
-		
-		boolean containsThree = false;
-		boolean containsTwo = false;
-		for (int key : map.keySet()) {
-			if (map.get(key) == 3) containsThree = true;
-			if (map.get(key) == 2) containsTwo = true;
-		}
-		if (containsThree && containsTwo) scores[8] = 25;
-		else scores[8] = 0;
-		scored[8] = true;
-	}
+        int[] counts = new int[6];
+        for (Dice d : dg.getDice()) {
+            counts[d.getValue() - 1]++;
+        }
+
+        boolean containsThree = false;
+        boolean containsTwo = false;
+        for (int count : counts) {
+            if (count == 3) containsThree = true;
+            if (count == 2) containsTwo = true;
+        }
+        if (containsThree && containsTwo) scores[8] = 25;
+        else scores[8] = 0;
+        scored[8] = true;
+    }
 	
 	public void smallStraight(DiceGroup dg) {
-		SortedSet<Integer> set = new TreeSet<>();
-		
-		for (Dice d : dg.getDice()) {
-			set.add(d.getValue());
-		}
-	
-		List<Integer> list = new ArrayList(set);
-		boolean works = false;
-		
-		for (int i = 0; i<list.size() - 3; i++) {
-			if (list.get(i + 3) == list.get(i + 2) + 1 &&
-				list.get(i + 2) == list.get(i + 1) + 1 &&
-				list.get(i + 1) == list.get(i) + 1) works = true;
-		}
-		
-		if (works) scores[9] = 30;
-		else scores[9] = 0;
-		scored[9] = true;
-	}
+        int[] counts = new int[6];
+        for (Dice d : dg.getDice()) {
+            counts[d.getValue() - 1] = 1;
+        }
+
+        boolean works = hasConsecutiveSequence(counts, 4);
+        scores[9] = works ? 30 : 0;
+        scored[9] = true;
+    }
+
 	
 	public void largeStraight(DiceGroup dg) {
-		SortedSet<Integer> set = new TreeSet<>();
-		
-		for (Dice d : dg.getDice()) {
-			set.add(d.getValue());
-		}
-	
-		List<Integer> list = new ArrayList(set);
-		boolean works = false;
-		
-		for (int i = 0; i<list.size() - 4; i++) {
-			if (list.get(i + 4) ==  list.get(i + 3) + 1 &&
-				list.get(i + 3) == list.get(i + 2) + 1 &&
-				list.get(i + 2) == list.get(i + 1) + 1 &&
-				list.get(i + 1) == list.get(i) + 1) works = true;
-		}
-		
-		if (works) scores[10] = 40;
-		else scores[10] = 0;
-		scored[10] = true;
-	}
+        int[] counts = new int[6];
+        for (Dice d : dg.getDice()) {
+            counts[d.getValue() - 1] = 1;
+        }
+
+        boolean works = hasConsecutiveSequence(counts, 5);
+        scores[10] = works ? 40 : 0;
+        scored[10] = true;
+    }
+
+	private boolean hasConsecutiveSequence(int[] counts, int length) {
+        int consecutiveCount = 0;
+        for (int count : counts) {
+            if (count == 1) {
+                consecutiveCount++;
+                if (consecutiveCount >= length) return true;
+            } else {
+                consecutiveCount = 0;
+            }
+        }
+        return false;
+    }
 	
 	public void chance(DiceGroup dg) {
 		int totalScore = 0;

@@ -29,6 +29,17 @@ public class Yahtzee {
 			turn = 3 - turn;
 			round++;
 		}
+		
+		int aScore = 0, bScore = 0;
+		for (int i = 1; i<=13; i++) aScore += playerOne.getScoreCard().getScore(i);
+		for (int i = 1; i<=13; i++) aScore += playerTwo.getScoreCard().getScore(i);
+		
+		System.out.println(playerOne.getName() + ", you scored " + aScore + " points.");
+		System.out.println(playerTwo.getName() + ", you scored " + bScore + " points.");
+		
+		if (aScore > bScore) System.out.println("Congratulations, " + playerOne.getName() + ", you win!!!");
+		else if (bScore > aScore) System.out.println("Congratulations, " + playerTwo.getName() + ", you win!!!");
+		else System.out.println("There was a Tie.");
 	}
 	
 	public void runPlayerTurn(int turn) {
@@ -40,37 +51,33 @@ public class Yahtzee {
 		Prompt.getString(name + ", it's your turn to play. Please hit enter to roll the dice ");
 		dice.printDice();
 		
-		String hold = getHold();
+		String hold = "";
 		
 		int numRolls = 1;
-		while (!hold.equals("-1") && numRolls < 3) {
+		do {
+			hold = getHold();
 			dice.rollDice(hold);
 			dice.printDice();
-			hold = getHold();
 			numRolls++;
-		}
+		} while(!hold.equals("-1") && numRolls <= 2);
+		
 		dice.printDice();
 		
-		if (turn == 1) {
-			playerOne.getScoreCard().printCardHeader();
-			playerOne.getScoreCard().printPlayerScore(playerOne);
-			
-			int choice = Prompt.getInt(name + ", now you need to make a choice. Pick a valid integer from the list above (1-13)", 1, 13);
-			playerOne.getScoreCard().changeScore(choice, dice);
-			
-			playerOne.getScoreCard().printCardHeader();
-			playerOne.getScoreCard().printPlayerScore(playerOne);
-		}
-		else {
-			playerTwo.getScoreCard().printCardHeader();
-			playerTwo.getScoreCard().printPlayerScore(playerTwo);
-			
-			int choice = Prompt.getInt(name + ", now you need to make a choice. Pick a valid integer from the list above (1-13)", 1, 13);
-			playerTwo.getScoreCard().changeScore(choice, dice);
-			
-			playerTwo.getScoreCard().printCardHeader();
-			playerTwo.getScoreCard().printPlayerScore(playerTwo);
-		}
+		playerOne.getScoreCard().printCardHeader();
+		playerOne.getScoreCard().printPlayerScore(playerOne);
+		playerTwo.getScoreCard().printPlayerScore(playerTwo);
+		
+		int choice = 1;
+		do {
+			choice = Prompt.getInt(name + ", now you need to make a choice. Pick a valid integer from the list above ", 1, 13);
+		} while(((turn == 1) && (playerOne.getScoreCard().beenScored(choice))) ||
+				((turn == 2) && (playerTwo.getScoreCard().beenScored(choice))));
+		if (turn == 1) playerOne.getScoreCard().changeScore(choice, dice);
+		else playerTwo.getScoreCard().changeScore(choice, dice);
+		
+		playerOne.getScoreCard().printCardHeader();
+		playerOne.getScoreCard().printPlayerScore(playerOne);
+		playerTwo.getScoreCard().printPlayerScore(playerTwo);
 	}
 	
 	public String getHold() {
