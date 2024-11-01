@@ -37,20 +37,30 @@ public class DiceGroup {
 	 *	you complete
 	 */
 	public void rollDice(String rawHold) { 
+
+		// check if each number possible is in the rawHold
 		for (int i = 0; i<NUM_DICE; i++) {
 			boolean hold = false;
 			for (int j = 0; j<rawHold.length(); j++) {
 				char c = rawHold.charAt(j);
+
+				// if it is, do not roll it
 				if ((int)(c - '0') == (i + 1)) {
 					hold = true;
 				}
 			}
+
+			//if its not, roll it
 			if (!hold) {
 				die[i].roll();
 			}
 		}
 	}
+
 	
+	/**
+	* Method to return the Dice array
+ 	*/
 	public Dice[] getDice() {return die;}
 	
 	/**	getters - you complete */
