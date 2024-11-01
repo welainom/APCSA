@@ -25,17 +25,19 @@ public class Yahtzee {
 			
 			runPlayerTurn(turn);
 			turn = 3 - turn;
+			System.out.println("");
 			runPlayerTurn(turn);
 			turn = 3 - turn;
 			round++;
+			System.out.println("");
 		}
 		
 		int aScore = 0, bScore = 0;
 		for (int i = 1; i<=13; i++) aScore += playerOne.getScoreCard().getScore(i);
-		for (int i = 1; i<=13; i++) aScore += playerTwo.getScoreCard().getScore(i);
+		for (int i = 1; i<=13; i++) bScore += playerTwo.getScoreCard().getScore(i);
 		
-		System.out.println(playerOne.getName() + ", you scored " + aScore + " points.");
-		System.out.println(playerTwo.getName() + ", you scored " + bScore + " points.");
+		System.out.println(playerOne.getName() + ", you scored " + aScore + " points.\n");
+		System.out.println(playerTwo.getName() + ", you scored " + bScore + " points.\n");
 		
 		if (aScore > bScore) System.out.println("Congratulations, " + playerOne.getName() + ", you win!!!");
 		else if (bScore > aScore) System.out.println("Congratulations, " + playerTwo.getName() + ", you win!!!");
