@@ -17,21 +17,22 @@ public class HTMLUtilities {
 	 *	@return				the String array of tokens
 	 */
 	 
-	public static void main(String[] args) {
-		HTMLUtilities h = new HTMLUtilities();
-		h.test();
-	}
+// 	public static void main(String[] args) {
+// 		HTMLUtilities h = new HTMLUtilities();
+// 		h.test();
+// 	}
 	
-	public void test() {
-		System.out.println("");
-		tokenizeHTMLString("<q>Quote this line.</q>Horizontal rule <hr></body></html>");
-		System.out.println("");
-	}
+// 	public void test() {
+// 		System.out.println("");
+// 		tokenizeHTMLString("<q>Quote this line.</q>Horizontal rule <hr></body></html>");
+// 		System.out.println("");
+// 	}
 	
 	
 	// returns String[]
 	// METHOD DONE except for tokenizing numbers
 	// Must make HELPER METHODS for each type of tokenization
+	// example3.html does not work for -0.987.
 	public String[] tokenizeHTMLString(String str) {
 		// make the size of the array large to start
 		String[] result = new String[10000];
@@ -44,7 +45,7 @@ public class HTMLUtilities {
 			boolean numFound = false;
 			char c = str.charAt(i);
 
-			if (('0' <= c && c <= '9') || (c == '-' && ('0' <= str.charAt(i+1) && str.charAt(i + 1) <= '9'))) {
+			if (('0' <= c && c <= '9') || (c == '-' && ('0' <= str.charAt(i + 1) && str.charAt(i + 1) <= '9'))) {
 				numFound = true;
 				intv.setLeft(i);
 			} 
@@ -80,7 +81,7 @@ public class HTMLUtilities {
 			}
 
 			for (int j = i + 1; j<str.length() && numFound; j++) {
-				if (str.charAt(j) == 9) {
+				if ( ('0' > str.charAt(j) || str.charAt(j) > '9') && (str.charAt(j) != 'e' && str.charAt(j) != '.' && str.charAt(j) != '-')) {
 					numFound = false;
 					intv.setRight(j - 1);
 					i = j - 1;
@@ -133,7 +134,6 @@ class Interval {
 	}
 	
 	public String processInterval(String s) {
-		
 		return s.substring(left, right + 1);
 	}
 }
