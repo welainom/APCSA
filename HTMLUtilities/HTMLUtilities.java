@@ -1,8 +1,8 @@
 /**
  *	Utilities for handling HTML
  *
- *	@author	
- *	@since	
+ *	@author	William Liu
+ *	@since	11/12/24
  */
  
 import java.util.ArrayList;
@@ -23,41 +23,81 @@ public class HTMLUtilities {
 	}
 	
 	public void test() {
-		tokenizeHTMLString("<q><q><q><q><q>Quote this line.</q></q></q></q></q> Horizontal rule <hr></body></html>");
+		System.out.println("");
+		tokenizeHTMLString("<q>Quote this line.</q>Horizontal rule <hr></body></html>");
+		System.out.println("");
 	}
+	
+	
 	// returns String[]
-	public void tokenizeHTMLString(String str) {
+	// METHOD DONE except for tokenizing numbers
+	// Must make HELPER METHODS for each type of tokenization
+	public String[] tokenizeHTMLString(String str) {
 		// make the size of the array large to start
 		String[] result = new String[10000];
-		
-		// for i = 0 <len 
-		// make new interval set left = i 
-		// for j = i + 1 find > set i = j + 1 set right = j
-		// add proces interval to result
 		
 		ArrayList<String> tokens = new ArrayList<String>();
 		for (int i = 0; i<str.length(); i++) {
 			Interval intv = new Interval();
-			boolean found = false;
-			if (str.charAt(i) == '<') {
-				found = true;
+			boolean tagFound = false;
+			boolean wordFound = false;
+			boolean numFound = false;
+			char c = str.charAt(i);
+
+			if (('0' <= c && c <= '9') || (c == '-' && ('0' <= str.charAt(i+1) && str.charAt(i + 1) <= '9'))) {
+				numFound = true;
+				intv.setLeft(i);
+			} 
+			else if (c == '.' || c == ',' || c == ';' || c == ':' || c == '(' || c == ')' || 
+				c == '?' || c == '!' || c == '=' || c == '&' || c == '~' || c == '+' || c == '-') {
+				tokens.add(Character.toString(c));
+			}
+			else if (c == '<') {
+				tagFound = true;
+				intv.setLeft(i);
+			}
+			else if ( ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') && !tagFound) {
+				wordFound = true;
 				intv.setLeft(i);
 			}
 			
-			for (int j = i + 1; j<str.length() && found; j++) {
+			for (int j = i + 1; j<str.length() && tagFound; j++) {
 				if (str.charAt(j) == '>') {
-					found = false;
+					tagFound = false;
 					intv.setRight(j);
 					i = j;
 					tokens.add(intv.processInterval(str));
 				}
 			}
+
+			for (int j = i + 1; j<str.length() && wordFound; j++) {
+				if (!(('a' <= str.charAt(j) && str.charAt(j) <= 'z') || ('A' <= str.charAt(j) && str.charAt(j) <= 'Z') || str.charAt(j) == '-')) {
+					wordFound = false;
+					intv.setRight(j - 1);
+					i = j - 1;
+					tokens.add(intv.processInterval(str));
+				}
+			}
+
+			for (int j = i + 1; j<str.length() && numFound; j++) {
+				if (str.charAt(j) == 9) {
+					numFound = false;
+					intv.setRight(j - 1);
+					i = j - 1;
+					tokens.add(intv.processInterval(str));
+				}
+			}
 		}
 		
-		for (String s : tokens) System.out.println(s);
+		// for (String s : tokens) System.out.println(s);
 		
+		result = new String[tokens.size()];
+		for (int i = 0; i<tokens.size(); i++) {
+			result[i] = tokens.get(i);
+		}
+
 		// return the correctly sized array
-		//return result;
+		return result;
 	}
 	
 	/**
