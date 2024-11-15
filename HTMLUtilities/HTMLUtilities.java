@@ -255,7 +255,7 @@ public class HTMLUtilities {
 	*	Checks if a char is a number
  	* 	@param c	the char you want to check
   	*	@return 	whether c is a number
- 	*/
+ 	*/	
 	public boolean isNumber(char c) {
 		return '0' <= c && c <= '9';
 	}
