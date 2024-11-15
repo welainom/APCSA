@@ -8,23 +8,25 @@
  */
 
 public class HTMLUtilities {
+	// Comments and preformat
+	private final String COMMENT_START = "<!--"; // Start of comment
+	private final String COMMENT_END = "-->";	 // End of comment
+	private final String PRE_START = "<pre>";    // Start of preformatted text
+	private final String PRE_END = "</pre>";     // End of preformatted text
+
 	// Possible tokenizer states
 	private enum TokenState { NONE, COMMENT, PRE }; 
 	
 	// The current state of the tokenizer
 	private TokenState state = TokenState.NONE;
 	
-	// Comments and preformatted blocks
-	private final String COMMENT_START = "<!--"; // Start of comment
-	private final String PRE_START = "<pre>";    // Start of preformatted text
-	private final String PRE_END = "</pre>";     // End of preformatted text
-
 	/**
-	 *	Breaks down an HTML string into individual tokens. 
-	 *	Handles comments and preformatted text separately to avoid processing HTML within these blocks.
-	 *	
-	 *	@param str	The HTML string to tokenize.
-	 *	@return		A String array containing each token from the HTML string.
+	 *	Break the HTML string into tokens. The array returned is
+	 *	exactly the size of the number of tokens in the HTML string.
+	 *	Example:	HTML string = "Goodnight moon goodnight stars"
+	 *				returns { "Goodnight", "moon", "goodnight", "stars" }
+	 *	@param str			the HTML string
+	 *	@return				the String array of tokens
 	 */
 	public String[] tokenizeHTMLString(String str) {
 		// make the size of the array large to start
@@ -43,8 +45,8 @@ public class HTMLUtilities {
 				case COMMENT:
 				
 					// Continue until the end is reached
-					if((str.charAt(idx) == '>' && str.charAt(idx - 1) == '-' &&
-						str.charAt(idx - 2) == '-')) {
+					if(str.charAt(idx) == COMMENT_END.charAt(2) && str.charAt(idx - 1) == COMMENT_END.charAt(1) &&
+					   str.charAt(idx - 2) == COMMENT_END.charAt(0)){
 						state = TokenState.NONE;
 					}
 					idx++;
@@ -107,7 +109,7 @@ public class HTMLUtilities {
 					}
 					
 					// Handle punctuation 
-					else if((".,;()?!=&~+-:".indexOf(cur) > -1)) {
+					else if(isPunctuation(cur)) {
 						token += cur;
 						tokenFound = true;
 						idx++;
@@ -117,7 +119,7 @@ public class HTMLUtilities {
 					else if((cur >= 'A' && cur <= 'Z') || (cur >= 'a' && cur <= 'z')) {
 						
 						// Take letters until a non letter is found
-						while(idx < str.length() && !tokenFound) {
+						do {
 							if(((str.charAt(idx) >= 'A' && str.charAt(idx) <= 'Z') || 
 							(str.charAt(idx) >= 'a' && str.charAt(idx) <= 'z') || 
 							str.charAt(idx) == '-')) {
@@ -127,7 +129,7 @@ public class HTMLUtilities {
 								tokenFound = true;
 							}
 							idx++;
-						}
+						} while(idx < str.length() && !tokenFound);
 						
 						if(token.length() > 0) {
 							tokenFound = true;
@@ -135,17 +137,88 @@ public class HTMLUtilities {
 					}
 					// Handle normal numbers
 					else if(('0' <= cur && cur <= '9')) {
-						token += getNum(str, idx);
+						
+						// Create String t to keep adding number token to t
+						String t = "";
+						int i = idx;
+						boolean found = false;
+						
+						do {
+							// Check all the different number cases
+							if(isNumber(str.charAt(i))) {
+								t += str.charAt(i);
+							}
+							else if(str.charAt(i) == '.' && i < str.length() - 1 &&
+									isNumber(str.charAt(i + 1))) {
+								t += str.charAt(i);
+							}
+							else if(str.charAt(i) == 'e') {
+								if(i < str.length() - 1 && isNumber(str.charAt(i + 1))) {
+									t += str.charAt(i);
+								}
+								else if(i < str.length() - 1 && 
+									(str.charAt(i + 1) == '-' || str.charAt(i + 1) == '+')) {
+										
+									if(i < str.length() - 2 && isNumber(str.charAt(i + 2))) {
+										t += str.charAt(i);
+										t += str.charAt(i + 1);
+										i++;
+									}
+								}
+							}
+							else {
+								found = true;
+							}
+							if(!found) {
+								i++;
+							}
+						} while(i < str.length() && !found);
+						
+						token += t;
 						idx += token.length();
 						tokenFound = true;
 					}
 					// Handle negative numbers
-					else if((cur == '-' &&
-							idx < str.length() - 1 && 
+					else if((cur == '-' && idx < str.length() - 1 && 
 							('0' <= str.charAt(idx + 1) && str.charAt(idx + 1) <= '9'))) {
 						token += cur;
 						idx++;
-						token += getNum(str, idx);
+
+						String t = "";
+						int i = idx;
+						boolean found = false;
+						
+						do {
+							if(isNumber(str.charAt(i))) {
+								t += str.charAt(i);
+							}
+							else if(str.charAt(i) == '.' && i < str.length() - 1 &&
+									isNumber(str.charAt(i + 1))) {
+								t += str.charAt(i);
+							}
+							else if(str.charAt(i) == 'e') {
+								if(i < str.length() - 1 && isNumber(str.charAt(i + 1))) {
+									t += str.charAt(i);
+								}
+								else if(i < str.length() - 1 && 
+									(str.charAt(i + 1) == '-' || str.charAt(i + 1) == '+')) {
+										
+									if(i < str.length() - 2 && isNumber(str.charAt(i + 2))) {
+										t += str.charAt(i);
+										t += str.charAt(i + 1);
+										i++;
+									}
+								}
+							}
+							else {
+								found = true;
+							}
+							if(!found) {
+								i++;
+							}
+						} while(i < str.length() && !found);
+						
+						token += t;
 						idx += token.length() - 1;
 						tokenFound = true;
 					}
@@ -168,55 +241,29 @@ public class HTMLUtilities {
 		// Return the array of tokens
 		return result;
 	}
-	
-	/**
-	 * Tokenizes numbers from string given starting index
-	 * Handles integers, decimals, and scientific notation. Positive or Negative.
-	 * 
-	 * @param str	The string being processed.
-	 * @param i		The starting index of the numeric token.
-	 * @return		A String - the numeric token found.
-	 */
-	private String getNum(String str, int i)
-	{
-		String token = "";
-		boolean isTokenFound = false;
-		
-		while(i < str.length() && !isTokenFound)
-		{
-			if(isNumber(str.charAt(i)))
-				token += str.charAt(i);
-			else if(str.charAt(i) == '.' && i < str.length() - 1 &&
-					isNumber(str.charAt(i + 1)))
-				token += str.charAt(i);
-			else if(str.charAt(i) == 'e')
-			{
-				if(i < str.length() - 1 && isNumber(str.charAt(i + 1)))
-					token += str.charAt(i);
-				else if(i < str.length() - 1 && 
-					(str.charAt(i + 1) == '-' || str.charAt(i + 1) == '+'))
-				{
-					if(i < str.length() - 2 && isNumber(str.charAt(i + 2)))
-					{
-						token += str.charAt(i);
-						token += str.charAt(i + 1);
-						i++;
-					}
-				}
-			}
-			else
-				isTokenFound = true;
-				
-			if(!isTokenFound)
-				i++;
-		}
-		return token;
-	}
 
+	/**
+	*	Checks if a char is punctuation
+ 	* 	@param c	the char you want to check
+  	*	@return 	whether c is a punctuation
+ 	*/
+	public boolean isPunctuation(char c) {
+		return (".,;()?!=&~+:".indexOf(c) > -1);
+	}
 	
 	/**
-	 *	Prints tokens in the array to the screen.
+	*	Checks if a char is a number
+ 	* 	@param c	the char you want to check
+  	*	@return 	whether c is a number
+ 	*/
+	public boolean isNumber(char c) {
+		return '0' <= c && c <= '9';
+	}
+	
+	/**
+	 *	Print the tokens in the array to the screen
 	 *	Precondition: All elements in the array are valid String objects.
+	 *				(no nulls)
 	 *	@param tokens		an array of String tokens
 	 */
 	public void printTokens(String[] tokens) {
