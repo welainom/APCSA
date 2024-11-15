@@ -177,35 +177,39 @@ public class HTMLUtilities {
 	 * @param i		The starting index of the numeric token.
 	 * @return		A String - the numeric token found.
 	 */
-	private String getNum(String str, int idx) {
+	private String getNum(String str, int i)
+	{
 		String token = "";
-
-		for (int i = idx; i < str.length(); i++) {
-			char cur = str.charAt(i);
-
-			// Process digits
-			if (Character.isDigit(cur)) {
-				token += cur;
-			}
-			// Handle decimal point if followed by a digit
-			else if (cur == '.' && i + 1 < str.length() && Character.isDigit(str.charAt(i + 1))) {
-				token += cur;
-			}
-			// Handle scientific notation 
-			else if (cur == 'e' && i + 1 < str.length()) {
-				token += cur;
-				char nextChar = str.charAt(i + 1);
-				if (nextChar == '-' || nextChar == '+') {
-					token += nextChar;
-					i++; // Skip the sign character
+		boolean isTokenFound = false;
+		
+		while(i < str.length() && !isTokenFound)
+		{
+			if(isNumber(str.charAt(i)))
+				token += str.charAt(i);
+			else if(str.charAt(i) == '.' && i < str.length() - 1 &&
+					isNumber(str.charAt(i + 1)))
+				token += str.charAt(i);
+			else if(str.charAt(i) == 'e')
+			{
+				if(i < str.length() - 1 && isNumber(str.charAt(i + 1)))
+					token += str.charAt(i);
+				else if(i < str.length() - 1 && 
+					(str.charAt(i + 1) == '-' || str.charAt(i + 1) == '+'))
+				{
+					if(i < str.length() - 2 && isNumber(str.charAt(i + 2)))
+					{
+						token += str.charAt(i);
+						token += str.charAt(i + 1);
+						i++;
+					}
 				}
 			}
-			// If character is not part of a number, exit the loop
-			else {
-				break;
-			}
+			else
+				isTokenFound = true;
+				
+			if(!isTokenFound)
+				i++;
 		}
-
 		return token;
 	}
 
