@@ -107,7 +107,7 @@ public class HTMLUtilities {
 					}
 					
 					// Handle punctuation 
-					else if((".,;()?!=&~+-:".indexOf(cur) > -1)) {
+					else if(isPunctuation(cur)) {
 						token += cur;
 						tokenFound = true;
 						idx++;
@@ -137,7 +137,7 @@ public class HTMLUtilities {
 					else if(('0' <= cur && cur <= '9')) {
 						String t = "";
 
-            char cur = str.charAt(idx);
+            					char cur = str.charAt(idx);
 						for (int i = idx; i < str.length() && Character.isDigit(cur); i++) {
 							cur = str.charAt(i);
 				
@@ -172,7 +172,7 @@ public class HTMLUtilities {
 						idx++;
 
 						String t = "";
-            char cur = str.charAt(idx);
+            					char cur = str.charAt(idx);
 						for (int i = idx; i < str.length() && Character.isDigit(cur); i++) {
 							cur = str.charAt(i);
 				
@@ -218,7 +218,16 @@ public class HTMLUtilities {
 		// Return the array of tokens
 		return result;
 	}
-  
+
+	/**
+	*	Checks if a char is punctuation
+ 	* 	@param c	the char you want to check
+  	*	@return 	whether c is a punctuation
+ 	*/
+	public boolean isPunctuation(char c) {
+		return (".,;()?!=&~+-:".indexOf(c) > -1);
+	}
+	
 	/**
 	 *	Prints tokens in the array to the screen.
 	 *	Precondition: All elements in the array are valid String objects.
