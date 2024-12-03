@@ -103,7 +103,7 @@ public class HTMLRender {
 		
 		int size = tokens.length;
 		int i = 0;
-		boolean bold = false, italic = false, pre = false;
+		boolean bold = false, italic = false, pre = false, header = false;
 		int numChars = 0;
 		int headerType = 0;
 		int maxChars = 80;
@@ -155,42 +155,49 @@ public class HTMLRender {
 				numChars = 0;
 			}
 			else if (cur.equalsIgnoreCase("<h1>")) {
+				header = true;
 				headerType = 1;
 				browser.printBreak();
 				numChars = 0;
 				maxChars = 40;
 			}
 			else if (cur.equalsIgnoreCase("<h2>")) {
+				header = true;
 				headerType = 2;
 				browser.printBreak();
 				numChars = 0;
 				maxChars = 50;
 			}
 			else if (cur.equalsIgnoreCase("<h3>")) {
+				header = true;
 				headerType = 3;
 				browser.printBreak();
 				numChars = 0;
 				maxChars = 60;
 			}
 			else if (cur.equalsIgnoreCase("<h4>")) {
+				header = true;
 				headerType = 4;
 				browser.printBreak();
 				numChars = 0;
 				maxChars = 80;
 			}
 			else if (cur.equalsIgnoreCase("<h5>")) {
+				header = true;
 				headerType = 5;
 				browser.printBreak();
 				numChars = 0;
 				maxChars = 100;
 			}
 			else if (cur.equalsIgnoreCase("<h6>")) {
+				header = true;
 				headerType = 6;
 				browser.printBreak();
 				numChars = 0;
 				maxChars = 120;
 			}
 			else if (cur.length() == 5 && cur.charAt(1) == '/' && (cur.charAt(2) == 'h' || cur.charAt(2) == 'H')) {
+				header = false;
 				headerType = 0;
 				browser.printBreak();
 				numChars = 0;
@@ -216,30 +223,28 @@ public class HTMLRender {
 					else if (italic) {
 						browser.printItalic(cur);
 					} 
-					else if (headerType == 0) {
-						browser.print(cur);
-					}
-					else if (1 <= headerType && headerType <= 6) {
-						switch (headerType) {
-							case 1:
-								browser.printHeading1(cur);
-								break;
-							case 2:
-								browser.printHeading2(cur);
-								break;
-							case 3:
-								browser.printHeading3(cur);
-								break;
-							case 4:
-								browser.printHeading4(cur);
-								break;
-							case 5:
-								browser.printHeading5(cur);
-								break;
-							case 6:
-								browser.printHeading6(cur);
-								break;
+					else if (header) {
+						if (headerType == 1) {
+							browser.printHeading1(cur);
 						}
+						else if (headerType == 2) {
+							browser.printHeading2(cur);
+						}
+						else if (headerType == 3) {
+							browser.printHeading3(cur);
+						}
+						else if (headerType == 4) {
+							browser.printHeading4(cur);
+						}
+						else if (headerType == 5) {
+							browser.printHeading5(cur);
+						}
+						else if (headerType == 6) {
+							browser.printHeading6(cur);
+						}
+					}
+					else {
+						browser.print(cur);
 					}
 				}
 				if (".,;()?!=&~+:</q></Q>".indexOf(cur) > -1) {
