@@ -50,6 +50,13 @@ public class HTMLRender {
 	public static void main(String[] args) {
 		HTMLRender hf = new HTMLRender();
 		hf.run(args);
+		//hf.test();
+	}
+	
+	public void test() {
+		browser.printHeading1("HELLO");
+		browser.printHeading1("TESTING");
+		browser.printHeading2("BYEBYE");
 	}
 	
 	public void run(String[] args) {
@@ -79,130 +86,176 @@ public class HTMLRender {
 		}
 		input.close();
 		
-		tokens = tkns.toArray(new String[tkns.size()]);
+		int s = 0;
+		for (int i = 0; i<tkns.size(); i++) {
+			if (tkns.get(i) != null) {
+				s++;
+			}
+		}
+		tokens = new String[s];
+		int q = 0;
+		for (int i = 0; i<tkns.size(); i++) {
+			if (tkns.get(i) != null) {
+				tokens[q] = tkns.get(i);
+				q++;
+			}
+		}
 		
 		int size = tokens.length;
 		int i = 0;
 		boolean bold = false, italic = false, pre = false;
 		int numChars = 0;
 		int headerType = 0;
+		int maxChars = 80;
 		while (i < size) {
 			String cur = tokens[i];
 			
-			if (cur != null) {
-				if (cur.equalsIgnoreCase("<p>")) {
-					browser.printBreak();
-					numChars = 0;
+			if (cur.equalsIgnoreCase("<p>")) {
+				browser.printBreak();
+				numChars = 0;
+			} 
+			else if (cur.equalsIgnoreCase("</p>")) {
+				browser.printBreak();
+				numChars = 0;
+			} 
+			else if (cur.equalsIgnoreCase("<pre>")) {
+				pre = true;
+				browser.printBreak();
+				numChars = 0;
+			} 
+			else if (cur.equalsIgnoreCase("</pre>")) {
+				pre = false;
+				browser.printBreak();
+				numChars = 0;
+			} 
+			else if (cur.equalsIgnoreCase("<br>")) {
+				browser.printBreak();
+				numChars = 0;
+			} 
+			else if (cur.equalsIgnoreCase("<b>")) {
+				bold = true;
+			} 
+			else if (cur.equalsIgnoreCase("</b>")) {
+				bold = false;
+			} 
+			else if (cur.equalsIgnoreCase("<i>")) {
+				italic = true;
+			} 
+			else if (cur.equalsIgnoreCase("</i>")) {
+				italic = false;
+			} 
+			else if (cur.equalsIgnoreCase("<q>")) {
+				browser.print("\"");
+			} 
+			else if (cur.equalsIgnoreCase("</q>")) {
+				browser.print("\" ");
+			} 
+			else if (cur.equalsIgnoreCase("<hr>")) {
+				browser.printHorizontalRule();
+				numChars = 0;
+			}
+			else if (cur.equalsIgnoreCase("<h1>")) {
+				headerType = 1;
+				browser.printBreak();
+				numChars = 0;
+				maxChars = 40;
+			}
+			else if (cur.equalsIgnoreCase("<h2>")) {
+				headerType = 2;
+				browser.printBreak();
+				numChars = 0;
+				maxChars = 50;
+			}
+			else if (cur.equalsIgnoreCase("<h3>")) {
+				headerType = 3;
+				browser.printBreak();
+				numChars = 0;
+				maxChars = 60;
+			}
+			else if (cur.equalsIgnoreCase("<h4>")) {
+				headerType = 4;
+				browser.printBreak();
+				numChars = 0;
+				maxChars = 80;
+			}
+			else if (cur.equalsIgnoreCase("<h5>")) {
+				headerType = 5;
+				browser.printBreak();
+				numChars = 0;
+				maxChars = 100;
+			}
+			else if (cur.equalsIgnoreCase("<h6>")) {
+				headerType = 6;
+				browser.printBreak();
+				numChars = 0;
+				maxChars = 120;
+			}
+			else if (cur.length() == 5 && cur.charAt(1) == '/' && (cur.charAt(2) == 'h' || cur.charAt(2) == 'H')) {
+				headerType = 0;
+				browser.printBreak();
+				numChars = 0;
+				maxChars = 80;
+			}
+			
+			else if (cur.charAt(0) != '<' && cur.charAt(cur.length() - 1) != '>') {
+				System.out.println(cur + " " + numChars);
+				if (pre) {
+					browser.printPreformattedText(cur);
+					browser.println();
 				}
-				if (cur.equalsIgnoreCase("<b>")) 
-					bold = true; 
-				if (cur.equalsIgnoreCase("</b>")) 
-					bold = false;
-				if (cur.equalsIgnoreCase("<i>")) 
-					italic = true;
-				if (cur.equalsIgnoreCase("</i>"))
-					italic = false;
-				if (cur.equalsIgnoreCase("<pre>")) {
-					pre = true;
-					browser.printBreak();
-					numChars = 0;
-				}
-				if (cur.equalsIgnoreCase("</pre>")) 
-					pre = false;
-				if (cur.equalsIgnoreCase("<q>")) 
-					browser.print("\"");
-				if (cur.equalsIgnoreCase("</q>")) 
-					browser.print("\"");
-				if (cur.equalsIgnoreCase("<hr>")) {
-					browser.printHorizontalRule();
-					numChars = 0;
-				}
-				if (cur.equalsIgnoreCase("<br>")) {
-					browser.printBreak();
-					numChars = 0;
-				}
-				if (cur.equalsIgnoreCase("</p>") && tokens[i+1] != null && !tokens[i+1].equalsIgnoreCase("<p>")) {
-					browser.printBreak();
-					numChars = 0;
-				}
-					/*
-				if (cur.equalsIgnoreCase("<h1>")) 
-					headerType = 1;
-				if (cur.equalsIgnoreCase("<h2>")) 
-					headerType = 2;
-				if (cur.equalsIgnoreCase("<h3>")) 
-					headerType = 3;
-				if (cur.equalsIgnoreCase("<h4>")) 
-					headerType = 4;
-				if (cur.equalsIgnoreCase("<h5>")) 
-					headerType = 5;
-				if (cur.equalsIgnoreCase("<h6>")) 
-					headerType = 6;
-				if (cur.equalsIgnoreCase("</h1>")) 
-					headerType = 0;
-				if (cur.equalsIgnoreCase("</h2>")) 
-					headerType = 0;
-				if (cur.equalsIgnoreCase("</h3>")) 
-					headerType = 0;
-				if (cur.equalsIgnoreCase("</h4>")) 
-					headerType = 0;
-				if (cur.equalsIgnoreCase("</h5>")) 
-					headerType = 0;
-				if (cur.equalsIgnoreCase("</h6>")) 
-					headerType = 0;
-					*/
-				
-				if (cur.indexOf('<') != 0 || cur.indexOf('>') != cur.length() - 1) {
-					System.out.println(numChars);
-					if (numChars + cur.length() + 1 > 80 && !pre) {
+				else {
+					if (numChars + cur.length() > maxChars) {
+						System.out.println(cur);
 						browser.println();
 						numChars = 0;
 					}
-					else if (numChars > 0 && ".,;()?!=&~+:".indexOf(cur) == -1 && !pre) {
-						browser.print(" ");
+					
+					if (bold) {
+						browser.printBold(cur);
 					} 
-					
-					numChars += cur.length() + 1;
-					
-					switch (headerType) {/*
-						case 1:
-							browser.printHeading1(cur);
-							break;
-						case 2:
-							browser.printHeading2(cur);
-							break;
-						case 3:
-							browser.printHeading3(cur);
-							break;
-						case 4:
-							browser.printHeading4(cur);
-							break;
-						case 5:
-							browser.printHeading5(cur);
-							break;
-						case 6:
-							browser.printHeading6(cur);
-							break;*/
-						default:
-							if (pre) {
-								browser.printPreformattedText(cur);
-								browser.println();
-							}
-							else if (bold) {
-								browser.printBold(cur);
-							}
-							else if (italic) {
-								browser.printItalic(cur);
-							}
-							else {
-								browser.print(cur);
-							}
-							break;
+					else if (italic) {
+						browser.printItalic(cur);
+					} 
+					else if (headerType == 0) {
+						browser.print(cur);
+					}
+					else if (1 <= headerType && headerType <= 6) {
+						switch (headerType) {
+							case 1:
+								browser.printHeading1(cur);
+								break;
+							case 2:
+								browser.printHeading2(cur);
+								break;
+							case 3:
+								browser.printHeading3(cur);
+								break;
+							case 4:
+								browser.printHeading4(cur);
+								break;
+							case 5:
+								browser.printHeading5(cur);
+								break;
+							case 6:
+								browser.printHeading6(cur);
+								break;
+						}
 					}
 				}
+				if (".,;()?!=&~+:</q></Q>".indexOf(cur) > -1) {
+					numChars += 1;
+				}
+				else {
+					numChars += (cur.length() + 1);
+				}
+				
+				if (".,;()?!=&~+:</q></Q>".indexOf(tokens[i + 1]) == -1) {
+					browser.print(" ");
+				}
 			}
+
 			i++;
-		}
+		} 
 		
 		// for (String s : tokens) if (s != null) System.out.println(s);
 	}
