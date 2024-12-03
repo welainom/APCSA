@@ -157,42 +157,42 @@ public class HTMLRender {
 			else if (cur.equalsIgnoreCase("<h1>")) {
 				header = true;
 				headerType = 1;
-				browser.printBreak();
+				browser.println();
 				numChars = 0;
 				maxChars = 40;
 			}
 			else if (cur.equalsIgnoreCase("<h2>")) {
 				header = true;
 				headerType = 2;
-				browser.printBreak();
+				browser.println();
 				numChars = 0;
 				maxChars = 50;
 			}
 			else if (cur.equalsIgnoreCase("<h3>")) {
 				header = true;
 				headerType = 3;
-				browser.printBreak();
+				browser.println();
 				numChars = 0;
 				maxChars = 60;
 			}
 			else if (cur.equalsIgnoreCase("<h4>")) {
 				header = true;
 				headerType = 4;
-				browser.printBreak();
+				browser.println();
 				numChars = 0;
 				maxChars = 80;
 			}
 			else if (cur.equalsIgnoreCase("<h5>")) {
 				header = true;
 				headerType = 5;
-				browser.printBreak();
+				browser.println();
 				numChars = 0;
 				maxChars = 100;
 			}
 			else if (cur.equalsIgnoreCase("<h6>")) {
 				header = true;
 				headerType = 6;
-				browser.printBreak();
+				browser.println();
 				numChars = 0;
 				maxChars = 120;
 			}
