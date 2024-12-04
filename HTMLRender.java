@@ -127,7 +127,7 @@ public class HTMLRender {
 			else if (cur.equalsIgnoreCase("</pre>")) {
 				pre = false;
 				normal = true;
-				browser.printBreak();
+				browser.println();
 				numChars = 0;
 			} 
 			else if (cur.equalsIgnoreCase("<br>")) {
