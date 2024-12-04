@@ -247,7 +247,7 @@ public class HTMLRender {
 			if (cur.charAt(0) != '<' && cur.charAt(cur.length() - 1) != '>') {
 				if (pre) {
 					browser.printPreformattedText(cur);
-					browser.println();
+					browser.printBreak();
 				}
 				else {
 					if (numChars + cur.length() > maxChars) {
