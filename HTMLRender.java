@@ -24,6 +24,7 @@ import java.util.ArrayList;
  *	@author		William Liu
  *	@version	12/3/24
  */
+ 
 public class HTMLRender {
 	
 	// the array holding all the tokens of the HTML file
@@ -46,30 +47,24 @@ public class HTMLRender {
 		utils = new HTMLUtilities();
 	}
 	
-	
 	public static void main(String[] args) {
 		HTMLRender hf = new HTMLRender();
 		hf.run(args);
-		//hf.test();
 	}
 	
-	public void test() {
-		browser.printHeading1("HELLO");
-		browser.printHeading1("TESTING");
-		browser.printHeading2("BYEBYE");
-		browser.printHeading2("ASDF");
-	}
-	
+	// Method that runs everything
 	public void run(String[] args) {
 		Scanner input = null;
 		String fileName = "";
 		
+		// Read the filename
 		if (args.length > 0)
 			fileName = args[0];
 		else {
 			System.out.println("Usage: java HTMLTester <htmlFileName>");
 			System.exit(0);
 		}
+		
 		
 		ArrayList<String> tkns = new ArrayList<String>();
 		
@@ -127,7 +122,6 @@ public class HTMLRender {
 			else if (cur.equalsIgnoreCase("</pre>")) {
 				pre = false;
 				normal = true;
-				browser.println();
 				numChars = 0;
 			} 
 			else if (cur.equalsIgnoreCase("<br>")) {
