@@ -21,8 +21,8 @@ import java.util.ArrayList;
  *		<hX>, </hX> - Start/end of heading with size X = 1, 2, 3, 4, 5, 6
  *		<pre>, </pre> - Preformatted text
  *
- *	@author
- *	@version
+ *	@author		William Liu
+ *	@version	12/3/24
  */
 public class HTMLRender {
 	
@@ -57,16 +57,15 @@ public class HTMLRender {
 		browser.printHeading1("HELLO");
 		browser.printHeading1("TESTING");
 		browser.printHeading2("BYEBYE");
+		browser.printHeading2("ASDF");
 	}
 	
 	public void run(String[] args) {
 		Scanner input = null;
 		String fileName = "";
 		
-		// if the command line contains the file name, then store it
 		if (args.length > 0)
 			fileName = args[0];
-		// otherwise print out usage message
 		else {
 			System.out.println("Usage: java HTMLTester <htmlFileName>");
 			System.exit(0);
@@ -92,6 +91,7 @@ public class HTMLRender {
 				s++;
 			}
 		}
+		
 		tokens = new String[s];
 		int q = 0;
 		for (int i = 0; i<tkns.size(); i++) {
@@ -103,7 +103,7 @@ public class HTMLRender {
 		
 		int size = tokens.length;
 		int i = 0;
-		boolean bold = false, italic = false, pre = false, header = false;
+		boolean bold = false, italic = false, pre = false, header = false, normal = true;
 		int numChars = 0;
 		int headerType = 0;
 		int maxChars = 80;
@@ -120,11 +120,13 @@ public class HTMLRender {
 			} 
 			else if (cur.equalsIgnoreCase("<pre>")) {
 				pre = true;
+				normal = false;
 				browser.printBreak();
 				numChars = 0;
 			} 
 			else if (cur.equalsIgnoreCase("</pre>")) {
 				pre = false;
+				normal = true;
 				browser.printBreak();
 				numChars = 0;
 			} 
@@ -134,15 +136,19 @@ public class HTMLRender {
 			} 
 			else if (cur.equalsIgnoreCase("<b>")) {
 				bold = true;
+				normal = false;
 			} 
 			else if (cur.equalsIgnoreCase("</b>")) {
 				bold = false;
+				normal = true;
 			} 
 			else if (cur.equalsIgnoreCase("<i>")) {
 				italic = true;
+				normal = false;
 			} 
 			else if (cur.equalsIgnoreCase("</i>")) {
 				italic = false;
+				normal = true;
 			} 
 			else if (cur.equalsIgnoreCase("<q>")) {
 				browser.print("\"");
@@ -156,63 +162,95 @@ public class HTMLRender {
 			}
 			else if (cur.equalsIgnoreCase("<h1>")) {
 				header = true;
+				normal = false;
 				headerType = 1;
-				browser.println();
+				browser.printBreak();
 				numChars = 0;
 				maxChars = 40;
 			}
 			else if (cur.equalsIgnoreCase("<h2>")) {
 				header = true;
+				normal = false;
 				headerType = 2;
-				browser.println();
+				browser.printBreak();
 				numChars = 0;
 				maxChars = 50;
 			}
 			else if (cur.equalsIgnoreCase("<h3>")) {
 				header = true;
+				normal = false;
 				headerType = 3;
-				browser.println();
+				browser.printBreak();
 				numChars = 0;
 				maxChars = 60;
 			}
 			else if (cur.equalsIgnoreCase("<h4>")) {
 				header = true;
+				normal = false;
 				headerType = 4;
-				browser.println();
+				browser.printBreak();
 				numChars = 0;
 				maxChars = 80;
 			}
 			else if (cur.equalsIgnoreCase("<h5>")) {
 				header = true;
+				normal = false;
 				headerType = 5;
-				browser.println();
+				browser.printBreak();
 				numChars = 0;
 				maxChars = 100;
 			}
 			else if (cur.equalsIgnoreCase("<h6>")) {
 				header = true;
+				normal = false;
 				headerType = 6;
-				browser.println();
+				browser.printBreak();
 				numChars = 0;
 				maxChars = 120;
 			}
-			else if (cur.length() == 5 && cur.charAt(1) == '/' && (cur.charAt(2) == 'h' || cur.charAt(2) == 'H')) {
-				header = false;
-				headerType = 0;
-				browser.printBreak();
-				numChars = 0;
+			else if (cur.equalsIgnoreCase("</h1>")) {
+				header = false; 
+				normal = true;
+				headerType = 1; 
 				maxChars = 80;
 			}
-			
-			else if (cur.charAt(0) != '<' && cur.charAt(cur.length() - 1) != '>') {
-				System.out.println(cur + " " + numChars);
+			else if (cur.equalsIgnoreCase("</h2>")) {
+				header = false; 
+				normal = true;
+				headerType = 2; 
+				maxChars = 80;
+			}
+			else if (cur.equalsIgnoreCase("</h3>")) {
+				header = false; 
+				normal = true;
+				headerType = 3; 
+				maxChars = 80;
+			}
+			else if (cur.equalsIgnoreCase("</h4>")) {
+				header = false; 
+				normal = true;
+				headerType = 4; 
+				maxChars = 80;
+			}
+			else if (cur.equalsIgnoreCase("</h5>")) {
+				header = false; 
+				normal = true;
+				headerType = 5; 
+				maxChars = 80;
+			}
+			else if (cur.equalsIgnoreCase("</h6>")) {
+				header = false; 
+				normal = true;
+				headerType = 6; 
+				maxChars = 80;
+			}
+			if (cur.charAt(0) != '<' && cur.charAt(cur.length() - 1) != '>') {
 				if (pre) {
 					browser.printPreformattedText(cur);
 					browser.println();
 				}
 				else {
 					if (numChars + cur.length() > maxChars) {
-						System.out.println(cur);
 						browser.println();
 						numChars = 0;
 					}
@@ -223,14 +261,15 @@ public class HTMLRender {
 					else if (italic) {
 						browser.printItalic(cur);
 					} 
-					else if (header) {
+					else if(header)
+					{
 						if (headerType == 1) {
 							browser.printHeading1(cur);
 						}
 						else if (headerType == 2) {
 							browser.printHeading2(cur);
 						}
-						else if (headerType == 3) {
+						else if (headerType == 3){
 							browser.printHeading3(cur);
 						}
 						else if (headerType == 4) {
@@ -243,7 +282,7 @@ public class HTMLRender {
 							browser.printHeading6(cur);
 						}
 					}
-					else {
+					else if (normal) {
 						browser.print(cur);
 					}
 				}
@@ -255,13 +294,32 @@ public class HTMLRender {
 				}
 				
 				if (".,;()?!=&~+:</q></Q>".indexOf(tokens[i + 1]) == -1) {
-					browser.print(" ");
+					if (!header) {
+						browser.print(" ");
+					}
+					else {
+						if (headerType == 1) {
+							browser.printHeading1(" ");
+						}
+						else if (headerType == 2) {
+							browser.printHeading2(" ");
+						}
+						else if (headerType == 3) {
+							browser.printHeading3(" ");
+						}
+						else if (headerType == 4) {
+							browser.printHeading4(" ");
+						}
+						else if (headerType == 5) {
+							browser.printHeading5(" ");
+						}
+						else if (headerType == 6) {
+							browser.printHeading6(" ");
+						}
+					}
 				}
 			}
-
 			i++;
 		} 
-		
-		// for (String s : tokens) if (s != null) System.out.println(s);
 	}
 }
