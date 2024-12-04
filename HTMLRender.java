@@ -65,7 +65,7 @@ public class HTMLRender {
 			System.exit(0);
 		}
 		
-		
+		// Arraylist of tokens for easier processing
 		ArrayList<String> tkns = new ArrayList<String>();
 		
 		input = FileUtils.openToRead(fileName);
@@ -80,6 +80,7 @@ public class HTMLRender {
 		}
 		input.close();
 		
+		// filter out all nulls 
 		int s = 0;
 		for (int i = 0; i<tkns.size(); i++) {
 			if (tkns.get(i) != null) {
@@ -96,15 +97,21 @@ public class HTMLRender {
 			}
 		}
 		
-		int size = tokens.length;
-		int i = 0;
+		int size = tokens.length; 
+		int i = 0; // current index 
+		
+		// booleans to keep track of type of text
 		boolean bold = false, italic = false, pre = false, header = false, normal = true;
+		
+		// number of characters, heading type and max chars in a line
 		int numChars = 0;
 		int headerType = 0;
 		int maxChars = 80;
 		while (i < size) {
 			String cur = tokens[i];
 			
+			// process all the tags
+			// mark corresponding booleans, char nums, max chars, and print breaks if necessary
 			if (cur.equalsIgnoreCase("<p>")) {
 				browser.printBreak();
 				numChars = 0;
@@ -238,17 +245,22 @@ public class HTMLRender {
 				headerType = 6; 
 				maxChars = 80;
 			}
+			
+			// If the current token is not a tag
 			if (cur.charAt(0) != '<' && cur.charAt(cur.length() - 1) != '>') {
 				if (pre) {
 					browser.printPreformattedText(cur);
 					browser.printBreak();
 				}
 				else {
+					
+					// if the length after the current char exceeds the max go to the next line
 					if (numChars + cur.length() > maxChars) {
 						browser.println();
 						numChars = 0;
 					}
 					
+					// process the different types of test besides preformatted
 					if (bold) {
 						browser.printBold(cur);
 					} 
@@ -257,6 +269,8 @@ public class HTMLRender {
 					} 
 					else if(header)
 					{
+						
+						// print the corresponding heading types
 						if (headerType == 1) {
 							browser.printHeading1(cur);
 						}
@@ -280,18 +294,23 @@ public class HTMLRender {
 						browser.print(cur);
 					}
 				}
+				
+				// If the token is a punctuation, only add one to char num
 				if (".,;()?!=&~+:</q></Q>".indexOf(cur) > -1) {
 					numChars += 1;
 				}
-				else {
+				// if not, add the length + 1 because of the space 
+				else { 
 					numChars += (cur.length() + 1);
 				}
 				
 				if (".,;()?!=&~+:</q></Q>".indexOf(tokens[i + 1]) == -1) {
-					if (!header) {
+					// if its not a header, print normal space
+					if (!header) { 
 						browser.print(" ");
 					}
 					else {
+						// if it is a header, must print out heading space
 						if (headerType == 1) {
 							browser.printHeading1(" ");
 						}
@@ -313,7 +332,7 @@ public class HTMLRender {
 					}
 				}
 			}
-			i++;
+			i++; // increment index
 		} 
 	}
 }
