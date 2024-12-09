@@ -2,7 +2,14 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
 /**
- *	Population - <description goes here>
+ *	Population - Uses sorts to process data on cities across the US.
+ * 				 Operations supported:
+ * 				 1. Fifty least populous cities in USA (Selection Sort)
+ *				 2. Fifty most populous cities in USA (Merge Sort)
+ *				 3. First fifty cities sorted by name (Insertion Sort)
+ *				 4. Last fifty cities sorted by name descending (Merge Sort)
+ *				 5. Fifty most populous cities in named state (Merge Sort)
+ *				 6. All cities matching a name sorted by population (Merge Sort)
  *
  *	Requires FileUtils and Prompt classes.
  *
