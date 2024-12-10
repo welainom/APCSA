@@ -153,7 +153,7 @@ public class SortMethods {
 
         // Merge elements while both lists have elements
         while (i < left.size() && j < right.size()) {
-            if (left.get(i).compareTo(right.get(j), "") >= 0) {
+            if (comp.compareTo(left.get(i), right.get(j)) >= 0) {
                 cities.set(k++, left.get(i++));
             } else {
                 cities.set(k++, right.get(j++));
