@@ -44,15 +44,6 @@ public class City implements Comparable<City> {
 		return this.name.compareTo(other.getName());
 	}
 	
-	// CompareTo override for sorting by name. Call with compareTo(city, "")\
-	// Sort by name first, then population in ascending order
-	public int compareTo(City other, String useless) {
-		if (!this.name.equals(other.getName())) {
-			return this.name.compareTo(other.getName());
-		}
-		else return this.population - other.getPopulation();
-	}
-	
 	/**	Equal city name and state name
 	 *	@param other		the other City to compare
 	 *	@return				true if city name and state name equal; false otherwise
