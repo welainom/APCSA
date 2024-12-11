@@ -198,7 +198,7 @@ public class Population {
 		for (int i = 1; i < n; i++) {
 			City key = cities.get(i);
 			int j = i - 1;
-			while (j >= 0 && comp.compareTo(cities.get(j), key) > 0) {
+			while (j >= 0 && comp.compare(cities.get(j), key) > 0) {
 				cities.set(j + 1, cities.get(j));
 				j--;
 			}
@@ -290,7 +290,7 @@ public class Population {
 		
 		// Merge elements while both lists have elements
 		while (i < left.size() && j < right.size()) {
-			if (comp.compareTo(left.get(i), right.get(j)) >= 0) {
+			if (comp.compare(left.get(i), right.get(j)) >= 0) {
 				cities.set(k++, left.get(i++));
 			} 
 			else {
