@@ -62,7 +62,7 @@ public class SortMethods {
         for (int i = 1; i < n; i++) {
             City key = cities.get(i);
             int j = i - 1;
-            while (j >= 0 && c.compare(cities.get(j), key) > 0) {
+            while (j >= 0 && c.compare(cities.get(j), key) <= 0) {
                 cities.set(j + 1, cities.get(j));
                 j--;
             }
@@ -153,7 +153,7 @@ public class SortMethods {
 
         // Merge elements while both lists have elements
         while (i < left.size() && j < right.size()) {
-            if (c.compare(left.get(i), right.get(j)) >= 0) {
+            if (c.compare(left.get(i), right.get(j)) <= 0) {
                 cities.set(k++, left.get(i++));
             } else {
                 cities.set(k++, right.get(j++));
