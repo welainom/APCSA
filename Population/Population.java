@@ -46,6 +46,7 @@ public class Population {
 		int choice = -1;
 		long startTime, endTime;
 		boolean finished = false;
+		SortMethods s = new SortMethods();
 		
 		while (choice != 9) { // while not quit
 			printMenu();
@@ -61,7 +62,7 @@ public class Population {
 					System.out.println("\n50 Least Populous States\n");
 					
 					startTime = System.currentTimeMillis();
-					selectionSort(cities); // Sorting
+					s.selectionSort(cities); // Sorting
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time
@@ -72,7 +73,7 @@ public class Population {
 					System.out.println("\n50 Most Populous States\n");
 					
 					startTime = System.currentTimeMillis();
-					mergeSort(cities); // Sorting
+					s.mergeSort(cities); // Sorting
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time
@@ -83,7 +84,7 @@ public class Population {
 					System.out.println("\n50 Cities Sorted by Name\n");
 					
 					startTime = System.currentTimeMillis();
-					insertionSort(cities); // Sorting
+					s.insertionSort(cities, comp); // Sorting
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time
@@ -94,7 +95,7 @@ public class Population {
 					System.out.println("\n50 Cities Sorted by Name Descending\n");
 					
 					startTime = System.currentTimeMillis();
-					mergeSortOther(cities); // Sorting
+					s.mergeSortOther(cities, comp); // Sorting
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time
@@ -118,7 +119,7 @@ public class Population {
 					System.out.println("\n50 Most Populous Cities in a State\n");
 					
 					startTime = System.currentTimeMillis();
-					mergeSort(newCities1); // Sorting
+					s.mergeSort(newCities1); // Sorting
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time. Math.min in case there are less than 50 cities
@@ -142,7 +143,7 @@ public class Population {
 					System.out.println("\n50 Most Populous Cities with a Name\n");
 					
 					startTime = System.currentTimeMillis();
-					mergeSort(newCities2); // Sorting
+					s.mergeSort(newCities2); // Sorting
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time. Math.min in case there are less than 50 cities
