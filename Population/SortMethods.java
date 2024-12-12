@@ -57,12 +57,12 @@ public class SortMethods {
      * Insertion Sort algorithm - in ascending order
      * @param cities list of City objects to sort
      */
-    public void insertionSort(List<City> cities) {
+    public void insertionSort(List<City> cities, CityComparatorByName c) {
         int n = cities.size();
         for (int i = 1; i < n; i++) {
             City key = cities.get(i);
             int j = i - 1;
-            while (j >= 0 && cities.get(j).compareTo(key, "") > 0) {
+            while (j >= 0 && c.compare(cities.get(j), key) > 0) {
                 cities.set(j + 1, cities.get(j));
                 j--;
             }
@@ -125,7 +125,7 @@ public class SortMethods {
 	 * 	Merge sort for sorting by city name instead of population in descending order
 	 * 	@param cities 	list of City objects to sort
 	 */
-	public void mergeSortOther(List<City> cities) {
+	public void mergeSortOther(List<City> cities, CityComparatorByName c) {
         if (cities.size() > 1) {
             int mid = cities.size() / 2;
 
@@ -134,11 +134,11 @@ public class SortMethods {
             List<City> right = new ArrayList<>(cities.subList(mid, cities.size()));
 
             // Recursively sort the two halves
-            mergeSortOther(left);
-            mergeSortOther(right);
+            mergeSortOther(left, c);
+            mergeSortOther(right, c);
 
             // Merge the sorted halves
-            mergeOther(cities, left, right);
+            mergeOther(cities, left, right, c);
         }
     }
 
@@ -148,12 +148,12 @@ public class SortMethods {
      * @param left 		the left sorted list
      * @param right 	the right sorted list
      */
-    private void mergeOther(List<City> cities, List<City> left, List<City> right) {
+    private void mergeOther(List<City> cities, List<City> left, List<City> right, CityComparatorByName c) {
         int i = 0, j = 0, k = 0;
 
         // Merge elements while both lists have elements
         while (i < left.size() && j < right.size()) {
-            if (comp.compareTo(left.get(i), right.get(j)) >= 0) {
+            if (c.compare(left.get(i), right.get(j)) >= 0) {
                 cities.set(k++, left.get(i++));
             } else {
                 cities.set(k++, right.get(j++));
