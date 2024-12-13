@@ -57,7 +57,7 @@ public class Population {
 			}
 			
 			// process each choice
-			switch(choice) {
+			switch (choice) {
 				case 1:
 					System.out.println("\n50 Least Populous States\n");
 					
@@ -66,6 +66,9 @@ public class Population {
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time
+					System.out.printf("%2s %-22s %-22s %-12s %12s%n", "   ", "State", "City",
+                        "Type", "Population");
+
 					for (int i = 0 ;i<50; i++) System.out.printf("%-3s %s\n", "" + (i + 1) + ":", cities.get(i));
 					System.out.println("\nElapsed Time " + (endTime - startTime) + " milliseconds\n");
 					break;
@@ -77,6 +80,8 @@ public class Population {
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time
+					System.out.printf("%2s %-22s %-22s %-12s %12s%n", "   ", "State", "City",
+                        "Type", "Population");
 					for (int i = 0 ;i<50; i++) System.out.printf("%-3s %s\n", "" + (i + 1) + ":", cities.get(i));
 					System.out.println("\nElapsed Time " + (endTime - startTime) + " milliseconds\n");
 					break;
@@ -88,6 +93,8 @@ public class Population {
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time
+					System.out.printf("%2s %-22s %-22s %-12s %12s%n", "   ", "State", "City",
+                        "Type", "Population");
 					for (int i = 0 ;i<50; i++) System.out.printf("%-3s %s\n", "" + (i + 1) + ":", cities.get(i));
 					System.out.println("\nElapsed Time " + (endTime - startTime) + " milliseconds\n");
 					break;
@@ -99,6 +106,8 @@ public class Population {
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time
+					System.out.printf("%2s %-22s %-22s %-12s %12s%n", "   ", "State", "City",
+                        "Type", "Population");
 					for (int i = 0 ;i<50; i++) System.out.printf("%-3s %s\n", "" + (i + 1) + ":", cities.get(i));
 					System.out.println("\nElapsed Time " + (endTime - startTime) + " milliseconds\n");
 					break;
@@ -107,7 +116,7 @@ public class Population {
 					ArrayList<City> newCities1 = new ArrayList<City>();
 					
 					// Get user state name
-					while (newCities1.size() == 0) {
+					while (newCities1.isEmpty()) {
 						stateName = Prompt.getString("Enter State Name (ie. Alabama)");
 						
 						// If there are no cities that have the same state, the state does not exist
@@ -123,6 +132,8 @@ public class Population {
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time. Math.min in case there are less than 50 cities
+					System.out.printf("%2s %-22s %-22s %-12s %12s%n", "   ", "State", "City",
+                        "Type", "Population");
 					for (int i = 0 ;i<Math.min(50, newCities1.size()); i++) System.out.printf("%-3s %s\n", "" + (i + 1) + ":", newCities1.get(i));
 					System.out.println("\nElapsed Time " + (endTime - startTime) + " milliseconds\n");
 					break;
@@ -131,7 +142,7 @@ public class Population {
 					ArrayList<City> newCities2 = new ArrayList<City>();
 					
 					// Get user city Name
-					while (newCities2.size() == 0) {
+					while (newCities2.isEmpty()) {
 						name = Prompt.getString("Enter City Name");
 						
 						// If there are no cities with this name, it is invalid
@@ -147,6 +158,8 @@ public class Population {
 					endTime = System.currentTimeMillis();
 					
 					// Print cities and time. Math.min in case there are less than 50 cities
+					System.out.printf("%2s %-22s %-22s %-12s %12s%n", "   ", "State", "City",
+                        "Type", "Population");
 					for (int i = 0 ;i<Math.min(50, newCities2.size()); i++) System.out.printf("%-3s %s\n", "" + (i + 1) + ":", newCities2.get(i));
 					System.out.println("\nElapsed Time " + (endTime - startTime) + " milliseconds\n");
 					break;
@@ -184,7 +197,9 @@ public class Population {
 			
 			// add it to the list
 			cities.add(newCity);
+			lineScan.close();
 		}
+		in.close();
 	}
 	
 	/**	Prints the introduction to Population */
