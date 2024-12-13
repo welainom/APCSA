@@ -1,5 +1,12 @@
 import java.util.Comparator;
 
+/**
+ * CityComparatorByName - Used for comparisons and sorting cities by name
+ *
+ * @author		William Liu
+ * @since		12/8/24
+ */
+
 public class CityComparatorByName implements Comparator<City> {
         public int compare(City a, City b) {
                 if (a.getName().equals(b.getName())) {

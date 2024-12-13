@@ -38,7 +38,7 @@ public class City implements Comparable<City> {
 		if (this.population != other.getPopulation()) {
 			return this.population - other.getPopulation();
 		}
-		if (this.state != other.getState()) {
+		if (!this.state.equals(other.getState())) {
 			return this.state.compareTo(other.getState());
 		}
 		return this.name.compareTo(other.getName());
