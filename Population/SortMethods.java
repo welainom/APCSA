@@ -18,7 +18,7 @@ public class SortMethods {
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
                 if (cities.get(j).compareTo(cities.get(j + 1)) > 0) {
-                    swap(cities, j, j + 1); //swap if its not in order
+                    swap(cities, j, j + 1); // swap if out of place
                 }
             }
         }
@@ -43,13 +43,13 @@ public class SortMethods {
     public void selectionSort(List<City> cities) {
         int n = cities.size();
         for (int i = 0; i < n - 1; i++) {
-            int minIdx = i; // index of min element
+            int minIdx = i;
             for (int j = i + 1; j < n; j++) {
                 if (cities.get(j).compareTo(cities.get(minIdx)) < 0) {
-                    minIdx = j; // find min
+                    minIdx = j; // find min element
                 }
             }
-            swap(cities, i, minIdx); // swap the min
+            swap(cities, i, minIdx); // swap it
         }
     }
 
@@ -60,13 +60,13 @@ public class SortMethods {
     public void insertionSort(List<City> cities, CityComparatorByName c) {
         int n = cities.size();
         for (int i = 1; i < n; i++) {
-            City key = cities.get(i); // select element
+            City key = cities.get(i); // select current one
             int j = i - 1;
             while (j >= 0 && c.compare(cities.get(j), key) <= 0) {
-                cities.set(j + 1, cities.get(j));
+                cities.set(j + 1, cities.get(j)); // find correct place to insert
                 j--;
-            } // find where it fits in the first split of array
-            cities.set(j + 1, key); // insert
+            }
+            cities.set(j + 1, key); // swap it
         }
     }
 
@@ -78,13 +78,11 @@ public class SortMethods {
         if (cities.size() > 1) {
             int mid = cities.size() / 2;
 
-            // split list into two halves
-            List<City> left = new ArrayList<>();
-            List<City> right = new ArrayList<>();
-			left = cities.subList(0, mid);
-			right = cities.subList(mid, cities.size());
-			
-            // sort the two halves
+            // split into two halves
+            List<City> left = new ArrayList<>(cities.subList(0, mid));
+            List<City> right = new ArrayList<>(cities.subList(mid, cities.size()));
+
+            // sort two halves
             mergeSort(left);
             mergeSort(right);
 
@@ -105,19 +103,19 @@ public class SortMethods {
         // merge elements
         while (i < left.size() && j < right.size()) {
             if (left.get(i).compareTo(right.get(j)) >= 0) {
-                cities.set(k++, left.get(i++)); 
-                // This ++ increments after so set in not messed up
-            } else {
+                cities.set(k++, left.get(i++));  // this ++ increments after so it does not mess up set
+            } 
+            else {
                 cities.set(k++, right.get(j++));
             }
         }
 
-        // copy remaining elements from left
+        // copy elements from left
         while (i < left.size()) {
             cities.set(k++, left.get(i++));
         }
 
-        // copy remaining elements from right
+        // copy elements from right
         while (j < right.size()) {
             cities.set(k++, right.get(j++));
         }
@@ -132,11 +130,10 @@ public class SortMethods {
         if (cities.size() > 1) {
             int mid = cities.size() / 2;
 
-            // split list into two halves
-            List<City> left = new ArrayList<>();
-            List<City> right = new ArrayList<>();
-			left = cities.subList(0, mid);
-			right = cities.subList(mid, cities.size());
+            // split into two halves
+            List<City> left = new ArrayList<>(cities.subList(0, mid));
+            List<City> right = new ArrayList<>(cities.subList(mid, cities.size()));
+
             // sort the two halves
             mergeSortOther(left, c);
             mergeSortOther(right, c);
@@ -147,7 +144,7 @@ public class SortMethods {
     }
 
     /**
-     * Merges two sorted lists into one sorted list
+     * Merges two sorted lists into one sorted list by name
      * @param cities 	the original list to merge into
      * @param left 		the left sorted list
      * @param right 	the right sorted list
@@ -158,20 +155,19 @@ public class SortMethods {
         // merge elements
         while (i < left.size() && j < right.size()) {
             if (c.compare(left.get(i), right.get(j)) <= 0) {
-                cities.set(k++, left.get(i++));
-                // This ++ increments after so set in not messed up
+                cities.set(k++, left.get(i++)); // this ++ increments after so it does not mess up set 
             } 
             else {
                 cities.set(k++, right.get(j++));
             }
         }
 
-        // copy remaining elements from left
+        // copy elements from left
         while (i < left.size()) {
             cities.set(k++, left.get(i++));
         }
 
-        // copy remaining elements from right
+        // copy elements from right
         while (j < right.size()) {
             cities.set(k++, right.get(j++));
         }
