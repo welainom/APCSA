@@ -5,6 +5,7 @@
  *	@author		William Liu
  *	@since		12/8/24
  */
+
 public class City implements Comparable<City> {
 	private String state, name, designation;
 	private int population;
@@ -25,7 +26,6 @@ public class City implements Comparable<City> {
 		this.designation = other.getDesignation();
 		this.population = other.getPopulation();
 	}
-	// constructor
 	
 	/**	Compare two cities populations
 	 *	@param other		the other City to compare
@@ -49,7 +49,7 @@ public class City implements Comparable<City> {
 	 *	@return				true if city name and state name equal; false otherwise
 	 */
 	public boolean equals(City other) {
-		return this.name == other.getName();
+		return this.name.equals(other.getName()) && this.state.equals(other.getState());
 	}
 	
 	/**	Accessor methods */
