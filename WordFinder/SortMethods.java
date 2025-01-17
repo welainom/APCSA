@@ -9,7 +9,7 @@ import java.util.Scanner;		// for testing purposes
  *	Requires file randomWords.txt to execute a test run.
  *
  *	@author	William Liu
- *	@since	Sun, Jan 12 2025
+ *	@since	Jan 12 2025
  */
 public class SortMethods {
 	

@@ -14,11 +14,11 @@ import java.util.Scanner;
  *	Requires FileUtils class
  *
  *	@author	William Liu
- *	@since	Sun Jan 12, 2025
+ *	@since	Jan 12, 2025
  */
 public class WordFinder {
 		
-	private List<String> words;				// list of words
+	private List<String> words;		// list of words
 	
 	public WordFinder() {
 		words = new ArrayList<String>();
@@ -76,8 +76,7 @@ public class WordFinder {
 	 *	@return					if found, the index of the word inside words;
 	 *							if not found, a negative number
 	 */
-	public int binarySearchRecurse(List<String> listOfWords, String target,
-										int low, int high) {
+	public int binarySearchRecurse(List<String> listOfWords, String target, int low, int high) {
 		// if low index is greater than high, target not found and return negative number
 		if(low < high) 
 			return -1;
@@ -114,12 +113,15 @@ public class WordFinder {
 			int mid = (left+right)/2;
 			int compare = target.compareTo(listOfWords.get(mid));
 			
-			if(compare == 0)
+			if(compare == 0) {
 				return mid;
-			else if(compare < 0)
+			}
+			else if(compare < 0) {
 				right = mid -1;
-			else
+			}
+			else {
 				left = mid +1;
+			}
 		}
 		// if target not found in list return negative number
 		return -1;
