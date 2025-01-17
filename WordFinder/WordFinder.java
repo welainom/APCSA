@@ -58,9 +58,6 @@ public class WordFinder {
 		// if listOfWords is empty then return not found
 		if (listOfWords.size() == 0) return -1;
 		
-		// otherwise, recursively perform binary search to find target word
-		//return binarySearchRecurse(listOfWords, target, 0, listOfWords.size() - 1);
-		
 		// otherwise, iteratively perform binary search to find target word
 		return binarySearchIterative(listOfWords, target);
 	}
@@ -81,18 +78,21 @@ public class WordFinder {
 		if(low < high) 
 			return -1;
 		// compute middle index
-		int middle = (low+high)/2;
+		int middle = (low + high) / 2;
 		// compare the target to the mid index
 		int compare = target.compareTo(listOfWords.get(middle));
 		// if target is equal to mid then return the index of the matching word
-		if(compare == 0)
+		if(compare == 0) {
 			return middle;
+		}
 		// if target is less than mid, then check bottom of list recursively
-		if(compare < 0)
+		else if(compare < 0) {
 			return binarySearchRecurse(listOfWords, target, low, middle-1);
+		}
 		// otherwise, target is greater than mid so check top of list recursively
-		if(compare > 0)
+		else if(compare > 0) {
 			return binarySearchRecurse(listOfWords, target, middle+1, high);
+		}
 		return -1;	// temporary, just to make compiling work, remove later
 	}
 	
@@ -107,20 +107,20 @@ public class WordFinder {
 	public int binarySearchIterative(List<String> listOfWords, String target) {
 		// Insert your code here
 		int left = 0;
-		int right = listOfWords.size()-1;
+		int right = listOfWords.size() - 1;
 		while(left <= right)
 		{
-			int mid = (left+right)/2;
+			int mid = (left + right) / 2;
 			int compare = target.compareTo(listOfWords.get(mid));
 			
 			if(compare == 0) {
 				return mid;
 			}
 			else if(compare < 0) {
-				right = mid -1;
+				right = mid - 1;
 			}
 			else {
-				left = mid +1;
+				left = mid + 1;
 			}
 		}
 		// if target not found in list return negative number

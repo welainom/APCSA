@@ -56,27 +56,35 @@ public class SortMethods {
 		String[] left = new String[leftSize];
 		String[] right = new String[rightSize];
 
-		for (int i = 0; i < leftSize; i++) 
+		for (int i = 0; i < leftSize; i++) {
 			left[i] = arr.get(first + i);
-		for (int i = 0; i < rightSize; i++) 
+		}
+		for (int i = 0; i < rightSize; i++) {
 			right[i] = arr.get(mid + 1 + i);
+		}
 		
-
 		int i = 0, j = 0, k = first;
 
 		while (i < leftSize && j < rightSize) 
 		{
-			if (left[i].compareTo(right[j]) <= 0) 
-				arr.set(k++, left[i++]);
-			else 
-				arr.set(k++, right[j++]);
-			
+			if (left[i].compareTo(right[j]) <= 0)  {
+				arr.set(k, left[i]);
+				k++; i++;
+			}
+			else {
+				arr.set(k, right[j]);
+				k++; j++;
+			}
 		}
 
-		while (i < leftSize) 
-			arr.set(k++, left[i++]);
-		while (j < rightSize) 
-			arr.set(k++, right[j++]);
+		while (i < leftSize) {
+			arr.set(k, left[i]);
+			k++; i++;
+		}
+		while (j < rightSize) {
+			arr.set(k, right[j]);
+			k++; j++;
+		}
 	}
 
 	
