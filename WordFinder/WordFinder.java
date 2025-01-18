@@ -14,7 +14,7 @@ import java.util.Scanner;
  *	Requires FileUtils class
  *
  *	@author	William Liu
- *	@since	Jan 12, 2025
+ *	@since	1/13/25
  */
 public class WordFinder {
 		
