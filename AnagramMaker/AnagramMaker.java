@@ -8,6 +8,9 @@
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class AnagramMaker {
 								
@@ -35,6 +38,7 @@ public class AnagramMaker {
 		wu.sortWords();
 
 		anagrams = new ArrayList<String>();
+		numPhrases = 0;
 	}
 	
 	public static void main(String[] args) {
@@ -77,40 +81,50 @@ public class AnagramMaker {
 				phrase += c;
 			}
 		}
+
 		generateAnagrams(phrase);
 	}
 
 	public void generateAnagrams(String phrase) {
-		if (phrase.length() >= 1) {
-			ArrayList<String> allWords = new ArrayList<String>();
-			for (int i = 0; i<phrase.length(); i++) {
-				if (wu.findWord(phrase.substring(0, i)) >= 0) {
-					allWords.add(phrase.substring(0, i));
-				}
-				if (wu.findWord(phrase.substring(i)) >= 0) {
-					allWords.add(phrase.substring(i));
-				}
-			}
-			// fake words: like "nt", "vi" for exmaple "monta vista"
-			// also cant make anagrams of certain word length
+		if (phrase.length() >= 1 && anagrams.size() < numWords) {
+			ArrayList<String> allWords = wu.allWords(phrase);
+			
 			for (String s : allWords) {
 				anagrams.add(s);
 				String new_phrase = "";
-				for (int i = 0; i<phrase.length(); i++) {
-					if (!(phrase.indexOf(s) <= i && i < phrase.indexOf(s) + s.length())) {
-						new_phrase += phrase.charAt(i);
+				int i = 0, j = 0;
+
+				char[] s_arr = s.toCharArray();
+				char[] p_arr = phrase.toCharArray();
+				Arrays.sort(s_arr);
+				Arrays.sort(p_arr);
+
+				while (i < s.length() && j < phrase.length()) {
+					if (s_arr[i] != p_arr[j]) {
+						new_phrase += p_arr[j];
+						j++;
 					}
+					else {
+						i++; 
+						j++;
+					}
+				}
+				for (int a = j; a<phrase.length(); a++) {
+					new_phrase += p_arr[a];
 				}
 				generateAnagrams(new_phrase);
 				anagrams.remove(s);
 			}
-			return;
 		}
 		else {
+			if (numPhrases >= maxPhrases) return;
+
 			for (String s : anagrams) {
 				System.out.print(s + " ");
 			}
+			numPhrases++;
 			System.out.println("");
+		
 			return;
 		}
 	}
