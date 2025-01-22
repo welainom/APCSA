@@ -3,9 +3,12 @@
  *
  *	Requires the WordUtilities, SortMethods, Prompt, and FileUtils classes
  *
- *	@author	
- *	@since	
+ *	@author		William Liu
+ *	@since		1/19/25
  */
+
+import java.util.ArrayList;
+
 public class AnagramMaker {
 								
 	private final String FILE_NAME = "randomWords.txt";	// file containing all words
@@ -19,7 +22,9 @@ public class AnagramMaker {
 	private int numWords;		// the number of words in a phrase to print
 	private int maxPhrases;		// the maximum number of phrases to print
 	private int numPhrases;		// the number of phrases that have been printed
-		
+	
+	private ArrayList<String> anagrams;
+
 	/*	Initialize the database inside WordUtilities
 	 *	The database of words does NOT have to be sorted for AnagramMaker to work,
 	 *	but the output will appear in order if you DO sort.
@@ -28,6 +33,8 @@ public class AnagramMaker {
 		wu = new WordUtilities();
 		wu.readWordsFromFile(FILE_NAME);
 		wu.sortWords();
+
+		anagrams = new ArrayList<String>();
 	}
 	
 	public static void main(String[] args) {
@@ -59,8 +66,52 @@ public class AnagramMaker {
 	 *	characters.
 	 */
 	public void runAnagramMaker() {
+		String input = Prompt.getString("Word(s), name or phrase (q to quit)");
+		numWords = Prompt.getInt("Number of words in anagram");
+		maxPhrases = Prompt.getInt("Maximum number of anagrams to print");
 
+		String phrase = "";
+		for (int i = 0; i<input.length(); i++) { 
+			char c = input.charAt(i);
+			if ('a' <= c && c <= 'z' || 'A' <= c && c <= 'Z') {
+				phrase += c;
+			}
+		}
+		generateAnagrams(phrase);
 	}
 
-	
+	public void generateAnagrams(String phrase) {
+		if (phrase.length() >= 1) {
+			ArrayList<String> allWords = new ArrayList<String>();
+			for (int i = 0; i<phrase.length(); i++) {
+				if (wu.findWord(phrase.substring(0, i)) >= 0) {
+					allWords.add(phrase.substring(0, i));
+				}
+				if (wu.findWord(phrase.substring(i)) >= 0) {
+					allWords.add(phrase.substring(i));
+				}
+			}
+			// fake words: like "nt", "vi" for exmaple "monta vista"
+			// also cant make anagrams of certain word length
+			for (String s : allWords) {
+				anagrams.add(s);
+				String new_phrase = "";
+				for (int i = 0; i<phrase.length(); i++) {
+					if (!(phrase.indexOf(s) <= i && i < phrase.indexOf(s) + s.length())) {
+						new_phrase += phrase.charAt(i);
+					}
+				}
+				generateAnagrams(new_phrase);
+				anagrams.remove(s);
+			}
+			return;
+		}
+		else {
+			for (String s : anagrams) {
+				System.out.print(s + " ");
+			}
+			System.out.println("");
+			return;
+		}
+	}
 }
