@@ -89,7 +89,7 @@ public class AnagramMaker {
     }
 
     public void generateAnagrams(String phrase, ArrayList<String> anagrams) {
-        if (!phrase.equals("")) {
+        if (phrase.isEmpty()) {
             if (anagrams.size() == numWords) {
 				for (String s : anagrams) {
 					System.out.print(s + " ");
