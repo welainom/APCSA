@@ -65,31 +65,6 @@ public class Picture extends SimplePicture
   }
   
   ////////////////////// methods ///////////////////////////////////////
-  
-  /** Method to show large changes in color 
-    * @param edgeDist the distance for finding edges
-    */
-    public void edgeDetectionBelow(int edgeDist)
-    {
-      Pixel leftPixel = null;
-      Pixel downPixel = null;
-      Pixel[][] pixels = this.getPixels2D();
-      Color downColor = null;
-      for (int row = 0; row < pixels.length - 1; row++)
-      {
-        for (int col = 0; 
-             col < pixels[0].length; col++)
-        {
-          leftPixel = pixels[row][col];
-          downPixel = pixels[row+1][col];
-          downColor = downPixel.getColor();
-          if (leftPixel.colorDistance(downColor) > edgeDist)
-            leftPixel.setColor(Color.BLACK);
-          else
-            leftPixel.setColor(Color.WHITE);
-        }
-      }
-    }
 
   /**
    * Method to return a string with information about this picture.
@@ -106,6 +81,122 @@ public class Picture extends SimplePicture
   }
   
   // START ASSIGNMENT ONES
+
+  public Picture swapLeftRight() {
+    Pixel[][] pixels = this.getPixels2D();
+    Picture result = new Picture(this);
+    Pixel[][] resultPixels = result.getPixels2D();
+    int width = this.getWidth();
+    int height = this.getHeight();
+    int halfWidth = width / 2;
+
+    for (int row = 0; row < height; row++) {
+        for (int col = 0; col < width; col++) {
+            int newCol = (col + halfWidth) % width; 
+            resultPixels[row][newCol].setColor(pixels[row][col].getColor()); 
+        }
+    }
+
+    return result;
+  }
+
+  public Picture stairStep(int shiftCount, int steps) {
+    Pixel[][] pixels = this.getPixels2D();
+    Picture result = new Picture(this);
+    Pixel[][] resultPixels = result.getPixels2D();
+    int width = this.getWidth();
+    int height = this.getHeight();
+    int stepHeight = height / steps;
+
+    for (int row = 0; row < height; row++) {
+        int stepNumber = row / stepHeight;
+        int shift = (stepNumber * shiftCount) % width;
+
+        for (int col = 0; col < width; col++) {
+            int newCol = (col + shift) % width; 
+            resultPixels[row][newCol].setColor(pixels[row][col].getColor()); 
+        }
+    }
+
+    return result;
+  }
+
+  public Picture wavy(int amplitude) {
+    Pixel[][] pixels = this.getPixels2D();
+    Picture result = new Picture(this);
+    Pixel[][] resultPixels = result.getPixels2D();
+    int width = this.getWidth();
+    int height = this.getHeight();
+
+    double frequency = 0.01;
+    double phase = 0; 
+
+    for (int row = 0; row < height; row++) {
+        int shift = (int) (amplitude * Math.sin(2*Math.PI*frequency * row + phase));
+        
+        for (int col = 0; col < width; col++) {
+            int newCol = col + shift;
+
+            newCol = ((newCol % width) + width) % width;
+            
+            resultPixels[row][newCol].setColor(pixels[row][col].getColor());
+        }
+    }
+
+    return result;
+  }
+
+  public Picture liquify(int maxHeight) {
+    Pixel[][] pixels = this.getPixels2D();
+    Picture result = new Picture(this);
+    Pixel[][] resultPixels = result.getPixels2D();
+    int width = this.getWidth();
+    int height = this.getHeight();
+
+    // Define the width of the Gaussian curve (adjust for different effects)
+    double bellWidth = height / 4.0;  
+    int centerRow = height / 2; // Center row
+
+    for (int row = 0; row < height; row++) {
+        // Compute shift using a Gaussian formula centered on the middle row
+        double exponent = Math.pow(row - centerRow, 2) / (2.0 * Math.pow(bellWidth, 2));
+        int rightShift = (int) (maxHeight * Math.exp(-exponent)); // Compute rightward shift
+
+        for (int col = 0; col < width; col++) {
+            // Compute new column position and ensure wrapping
+            int newCol = (col + rightShift) % width; 
+
+            // Set the pixel in the result image
+            resultPixels[row][newCol].setColor(pixels[row][col].getColor()); 
+        }
+    }
+
+    return result;
+}
+  /** Method to show large changes in color 
+  * @param edgeDist the distance for finding edges
+  */
+  public void edgeDetectionBelow(int edgeDist)
+  {
+    Pixel leftPixel = null;
+    Pixel downPixel = null;
+    Pixel[][] pixels = this.getPixels2D();
+    Color downColor = null;
+    for (int row = 0; row < pixels.length - 1; row++)
+    {
+      for (int col = 0; 
+            col < pixels[0].length; col++)
+      {
+        leftPixel = pixels[row][col];
+        downPixel = pixels[row+1][col];
+        downColor = downPixel.getColor();
+        if (leftPixel.colorDistance(downColor) > edgeDist)
+          leftPixel.setColor(Color.BLACK);
+        else
+          leftPixel.setColor(Color.WHITE);
+      }
+    }
+  }
 
   /** Method to set the blue to 0 */
   public void zeroBlue()
@@ -161,7 +252,7 @@ public class Picture extends SimplePicture
    */
   public Picture blur(int size) {
     Pixel[][] pixels = this.getPixels2D();
-    Picture result = new Picture(this);
+    Picture result = new Picture(pixels.length, pixels[0].length);
     Pixel[][] resultPixels = result.getPixels2D();
 
     for (int i = 0; i<pixels.length; i++) {

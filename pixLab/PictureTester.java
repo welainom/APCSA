@@ -1,3 +1,4 @@
+
 /**
  * This class contains class (static) methods
  * that will help you test the Picture class 
@@ -15,6 +16,34 @@ public class PictureTester
     Picture beach = new Picture("images/swan.jpg");
     beach.edgeDetectionBelow(edgeDist);
     beach.explore();
+  }
+
+  public static void testWavy(int amp) {
+    Picture motor = new Picture("images/redMotorcycle.jpg");
+    motor.explore();
+    motor = motor.wavy(amp);
+    motor.explore(); 
+  }
+
+  public static void testLiquify(int maxHeight) {
+    Picture motor = new Picture("images/redMotorcycle.jpg");
+    motor.explore();
+    motor = motor.liquify(maxHeight);
+    motor.explore(); 
+  }
+
+  public static void testStairStep(int shiftCount, int steps) {
+    Picture motor = new Picture("images/redMotorcycle.jpg");
+    motor.explore();
+    motor = motor.stairStep(shiftCount, steps);
+    motor.explore();
+  }
+
+  public static void testSwap() {
+    Picture motor = new Picture("images/redMotorcycle.jpg");
+    motor.explore();
+    motor = motor.swapLeftRight();
+    motor.explore();
   }
 
   public static void testBlur(int size) {
@@ -120,7 +149,11 @@ public class PictureTester
     //testGrayscale();
     //testBlur(10);
     //textPixelate(10);
-    testEnhance(20);
+    //testEnhance(20);
+    //testSwap();
+    //testStairStep(1, 400);
+    //testLiquify(100);
+    testWavy(15);
     //testEdgeDetectionBelow(15);
 
     //testKeepOnlyRed();
