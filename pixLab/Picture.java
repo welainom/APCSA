@@ -161,8 +161,8 @@ public class Picture extends SimplePicture
    */
   public Picture blur(int size) {
     Pixel[][] pixels = this.getPixels2D();
-    // Picture result = new Picture(this);
-    // Pixel[][] resultPixels = result.getPixels2D();
+    Picture result = new Picture(this);
+    Pixel[][] resultPixels = result.getPixels2D();
 
     for (int i = 0; i<pixels.length; i++) {
       for (int j = 0; j<pixels[0].length ;j++) {
@@ -182,13 +182,13 @@ public class Picture extends SimplePicture
         g /= num;
         b /= num;
 
-        pixels[i][j].setRed(r);
-        pixels[i][j].setGreen(g);
-        pixels[i][j].setBlue(b);
+        resultPixels[i][j].setRed(r);
+        resultPixels[i][j].setGreen(g);
+        resultPixels[i][j].setBlue(b);
       }
     }
 
-    return this;
+    return result;
   }
 
    /** Method that enhances a picture by getting average Color around
@@ -204,8 +204,8 @@ public class Picture extends SimplePicture
    */
   public Picture enhance(int size) {
     Pixel[][] pixels = this.getPixels2D();
-    // Picture result = new Picture(this);
-    // Pixel[][] resultPixels = result.getPixels2D();
+    Picture result = new Picture(pixels.length, pixels[0].length);
+    Pixel[][] resultPixels = result.getPixels2D();
 
     for (int i = 0; i<pixels.length; i++) {
       for (int j = 0; j<pixels[0].length ;j++) {
@@ -225,13 +225,13 @@ public class Picture extends SimplePicture
         g /= num;
         b /= num;
 
-        pixels[i][j].setRed(pixels[i][j].getRed() * 2 - r);
-        pixels[i][j].setGreen(pixels[i][j].getGreen() * 2 - g);
-        pixels[i][j].setBlue(pixels[i][j].getBlue() * 2 - b);
+        resultPixels[i][j].setRed(Math.max(0, pixels[i][j].getRed() * 2 - r));
+        resultPixels[i][j].setGreen(Math.max(0, pixels[i][j].getGreen() * 2 - g));
+        resultPixels[i][j].setBlue(Math.max(0, pixels[i][j].getBlue() * 2 - b));
       }
     }
 
-    return this;
+    return result;
   }
 
   /** Method to only keep blue, setting red and green to 0 */

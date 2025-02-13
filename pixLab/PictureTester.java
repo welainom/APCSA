@@ -20,7 +20,7 @@ public class PictureTester
   public static void testBlur(int size) {
     Picture beach = new Picture("images/beach.jpg");
     beach.explore();
-    beach.blur(size);
+    beach = beach.blur(size);
     beach.explore();
   }
 
@@ -35,7 +35,7 @@ public class PictureTester
   public static void testEnhance(int size) {
     Picture beach = new Picture("images/water.jpg");
     beach.explore();
-    beach.enhance(size);
+    beach = beach.enhance(size);
     beach.explore();
   }
 
