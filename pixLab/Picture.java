@@ -86,13 +86,10 @@ public class Picture extends SimplePicture
     Pixel[][] pixels = this.getPixels2D();
     Picture result = new Picture(this);
     Pixel[][] resultPixels = result.getPixels2D();
-    int width = this.getWidth();
-    int height = this.getHeight();
-    int halfWidth = width / 2;
-
-    for (int row = 0; row < height; row++) {
-        for (int col = 0; col < width; col++) {
-            int newCol = (col + halfWidth) % width; 
+    
+    for (int row = 0; row<this.getHeight(); row++) {
+        for (int col = 0; col<this.getWidth(); col++) {
+            int newCol = (col+this.getWidth()/2)%this.getWidth(); 
             resultPixels[row][newCol].setColor(pixels[row][col].getColor()); 
         }
     }
@@ -104,16 +101,13 @@ public class Picture extends SimplePicture
     Pixel[][] pixels = this.getPixels2D();
     Picture result = new Picture(this);
     Pixel[][] resultPixels = result.getPixels2D();
-    int width = this.getWidth();
-    int height = this.getHeight();
-    int stepHeight = height / steps;
 
-    for (int row = 0; row < height; row++) {
-        int stepNumber = row / stepHeight;
-        int shift = (stepNumber * shiftCount) % width;
+    for (int row = 0; row<this.getHeight(); row++) {
+        int stepNum = row/(this.getHeight()/steps);
+        int shift = (stepNum*shiftCount)%this.getWidth();
 
-        for (int col = 0; col < width; col++) {
-            int newCol = (col + shift) % width; 
+        for (int col = 0; col<this.getWidth(); col++) {
+            int newCol = (col+shift)%this.getWidth(); 
             resultPixels[row][newCol].setColor(pixels[row][col].getColor()); 
         }
     }
@@ -121,23 +115,22 @@ public class Picture extends SimplePicture
     return result;
   }
 
+
   public Picture wavy(int amplitude) {
     Pixel[][] pixels = this.getPixels2D();
     Picture result = new Picture(this);
     Pixel[][] resultPixels = result.getPixels2D();
-    int width = this.getWidth();
-    int height = this.getHeight();
-
+    
     double frequency = 0.01;
     double phase = 0; 
 
-    for (int row = 0; row < height; row++) {
-        int shift = (int) (amplitude * Math.sin(2*Math.PI*frequency * row + phase));
+    for (int row = 0; row<this.getHeight(); row++) {
+        int shift = (int) (amplitude*Math.sin(2*Math.PI*frequency*row+phase));
         
-        for (int col = 0; col < width; col++) {
+        for (int col = 0; col<this.getWidth(); col++) {
             int newCol = col + shift;
 
-            newCol = ((newCol % width) + width) % width;
+            newCol = ((newCol%this.getWidth())+this.getWidth())%this.getWidth();
             
             resultPixels[row][newCol].setColor(pixels[row][col].getColor());
         }
@@ -339,7 +332,7 @@ public class Picture extends SimplePicture
     }
   }
 
-  public void greyscale() {
+  public void grayscale() {
     Pixel[][] pixels = this.getPixels2D();
     for (Pixel[] rowArray : pixels) {
       for (Pixel pixelObj : rowArray) {

@@ -92,10 +92,10 @@ public class PictureTester
     beach.explore();
   }
 
-  public static void testGreyscale() {
+  public static void testGrayscale() {
     Picture beach = new Picture("images/beach.jpg");
     beach.explore();
-    beach.greyscale();
+    beach.grayscale();
     beach.explore();
   }
 
@@ -147,13 +147,13 @@ public class PictureTester
     //testZeroBlue();
     //testKeepOnlyBlue();
     //testGrayscale();
-    //testBlur(10);
-    //textPixelate(10);
+   // testBlur(10);
+   // textPixelate(10);
     //testEnhance(20);
     //testSwap();
-    //testStairStep(1, 400);
-    testLiquify(100);
-    testWavy(100);
+    testStairStep(1, 400);
+   // testLiquify(100);
+   // testWavy(100);
     //testEdgeDetectionBelow(15);
 
     //testKeepOnlyRed();
