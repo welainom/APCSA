@@ -152,8 +152,8 @@ public class PictureTester
     //testEnhance(20);
     //testSwap();
     //testStairStep(1, 400);
-    //testLiquify(100);
-    testWavy(15);
+    testLiquify(100);
+    testWavy(100);
     //testEdgeDetectionBelow(15);
 
     //testKeepOnlyRed();

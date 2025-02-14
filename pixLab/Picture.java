@@ -150,29 +150,21 @@ public class Picture extends SimplePicture
     Pixel[][] pixels = this.getPixels2D();
     Picture result = new Picture(this);
     Pixel[][] resultPixels = result.getPixels2D();
-    int width = this.getWidth();
-    int height = this.getHeight();
 
-    // Define the width of the Gaussian curve (adjust for different effects)
-    double bellWidth = height / 4.0;  
-    int centerRow = height / 2; // Center row
+    for (int row = 0; row<this.getHeight(); row++) {
+        double exponent = Math.pow(row - this.getHeight() / 2, 2) / (2.0 * Math.pow(this.getHeight() / 4.0, 2));
+        int rightShift = (int) (maxHeight * Math.exp(-exponent));
 
-    for (int row = 0; row < height; row++) {
-        // Compute shift using a Gaussian formula centered on the middle row
-        double exponent = Math.pow(row - centerRow, 2) / (2.0 * Math.pow(bellWidth, 2));
-        int rightShift = (int) (maxHeight * Math.exp(-exponent)); // Compute rightward shift
+        for (int col = 0; col<this.getWidth(); col++) {
+            int newCol = (col + rightShift) % this.getWidth(); 
 
-        for (int col = 0; col < width; col++) {
-            // Compute new column position and ensure wrapping
-            int newCol = (col + rightShift) % width; 
-
-            // Set the pixel in the result image
             resultPixels[row][newCol].setColor(pixels[row][col].getColor()); 
         }
     }
 
     return result;
-}
+  }
+
   /** Method to show large changes in color 
   * @param edgeDist the distance for finding edges
   */
