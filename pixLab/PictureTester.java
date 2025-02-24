@@ -12,6 +12,20 @@ public class PictureTester
 
   // ASSIGNMENT ONES
 
+  public static void testRotate(double angle) {
+    Picture beach = new Picture("images/beach.jpg");
+    beach.explore();
+    Picture result = beach.rotate(angle);
+    result.explore();
+  }
+
+  public static void testGreenScreen() {
+    // choose any picture to start since it will *not* be used
+    Picture pic = new Picture("images/beach.jpg");
+    Picture gScreen = pic.greenScreen();
+    gScreen.explore();
+  } 
+
   public static void testEdgeDetectionBelow(int edgeDist) {
     Picture beach = new Picture("images/swan.jpg");
     beach.edgeDetectionBelow(edgeDist);
@@ -92,10 +106,10 @@ public class PictureTester
     beach.explore();
   }
 
-  public static void testGrayscale() {
+  public static void testGreyscale() {
     Picture beach = new Picture("images/beach.jpg");
     beach.explore();
-    beach.grayscale();
+    beach.greyscale();
     beach.explore();
   }
 
@@ -147,15 +161,16 @@ public class PictureTester
     //testZeroBlue();
     //testKeepOnlyBlue();
     //testGrayscale();
-   // testBlur(10);
-   // textPixelate(10);
+    //testBlur(10);
+    //textPixelate(10);
     //testEnhance(20);
     //testSwap();
-    testStairStep(1, 400);
-   // testLiquify(100);
-   // testWavy(100);
-    //testEdgeDetectionBelow(15);
-
+    //testStairStep(1, 400);
+    // testLiquify(100);
+    // testWavy(100);
+    testEdgeDetectionBelow(15);
+    testGreenScreen();
+    testRotate(Math.PI/4);
     //testKeepOnlyRed();
     //testKeepOnlyGreen();
     //testNegate();

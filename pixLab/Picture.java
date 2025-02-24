@@ -82,14 +82,109 @@ public class Picture extends SimplePicture
   
   // START ASSIGNMENT ONES
 
+  /**
+   * Rotate image in radians, clean up "drop-out" pixels
+   * @param angle angle of rotation in radians
+   * @return Picture that is rotated
+   */
+  public Picture rotate(double angle) {
+    Pixel[][] pixels = this.getPixels2D();
+    int width = pixels[0].length;
+    int height = pixels.length;
+
+    // Calculate new dimensions for the rotated image
+    int newWidth = (int) Math.round(Math.abs(width * Math.cos(angle)) + Math.abs(height * Math.sin(angle)));
+    int newHeight = (int) Math.round(Math.abs(width * Math.sin(angle)) + Math.abs(height * Math.cos(angle)));
+
+    Picture result = new Picture(newHeight, newWidth);
+    Pixel[][] resultPixels = result.getPixels2D();
+
+    // Find the center of the original and new images
+    int cx = width / 2;
+    int cy = height / 2;
+    int newCx = newWidth / 2;
+    int newCy = newHeight / 2;
+
+    // Apply rotation for each pixel
+    for (int y0 = 0; y0 < height; y0++) {
+      for (int x0 = 0; x0 < width; x0++) {
+        // Convert pixel coordinates relative to the original center
+        int x_rel = x0 - cx;
+        int y_rel = y0 - cy;
+
+        // Apply rotation formulas
+        int x1 = (int) Math.round(x_rel * Math.cos(angle) - y_rel * Math.sin(angle)) + newCx;
+        int y1 = (int) Math.round(x_rel * Math.sin(angle) + y_rel * Math.cos(angle)) + newCy;
+
+        // Check if the new coordinates are within bounds
+        if (x1 >= 0 && x1 < newWidth && y1 >= 0 && y1 < newHeight) {
+            resultPixels[y1][x1].setColor(pixels[y0][x0].getColor());
+        }
+      }
+    }
+
+    // Fill missing pixels using nearest-neighbor interpolation
+    for (int i = 1; i < newHeight - 1; i++) {
+      for (int j = 1; j < newWidth - 1; j++) {
+        if (resultPixels[i][j].getColor().equals(Color.WHITE)) { // Assuming empty pixels are black
+            int new_r = (resultPixels[i + 1][j].getRed() + resultPixels[i - 1][j].getRed() +
+            resultPixels[i][j + 1].getRed() + resultPixels[i][j - 1].getRed()) / 4;
+            int new_g = (resultPixels[i + 1][j].getGreen() + resultPixels[i - 1][j].getGreen() +
+            resultPixels[i][j + 1].getGreen() + resultPixels[i][j - 1].getGreen()) / 4;
+            int new_b = (resultPixels[i + 1][j].getBlue() + resultPixels[i - 1][j].getBlue() +
+            resultPixels[i][j + 1].getBlue() + resultPixels[i][j - 1].getBlue()) / 4;
+
+            resultPixels[i][j].setColor(new Color(new_r, new_g, new_b));
+        }
+      }
+    }
+
+    return result;
+  }
+
+
+
+  public Picture greenScreen() {
+    // Get background picture
+    Picture bkgnd = new Picture("greenScreenImages/IndoorHouseLibraryBackground.jpg");
+    Pixel[][] bkgndPixels = bkgnd.getPixels2D();
+    // Get cat picture
+    Picture cat = new Picture("greenScreenImages/kitten1GreenScreen.jpg");
+    Pixel[][] catPixels = cat.getPixels2D(); // 410 43
+    // Get mouse picture
+    Picture mouse = new Picture("greenScreenImages/mouse1GreenScreen.jpg");
+    Pixel[][] mousePixels = mouse.getPixels2D();
+
+    for (int i = 0; i<catPixels.length; i++) {
+      for (int j = 0; j<catPixels[0].length; j++) {
+        if ((catPixels[i][j].getGreen() < 195) ||  (catPixels[i][j].getBlue() > 200)) {
+          bkgndPixels[i + 300][j + 300].setColor(catPixels[i][j].getColor());
+        }
+      }
+    }
+
+    for (int i = 0; i<mousePixels.length; i++) {
+      for (int j = 0; j<mousePixels[0].length; j++) {
+        if ((mousePixels[i][j].getRed() > 100)) {
+          bkgndPixels[i + 275][j + 500].setColor(mousePixels[i][j].getColor());
+        }
+      }
+    }
+    System.out.println(catPixels.length + " " + catPixels[0].length);
+    return bkgnd;
+  }
+
   public Picture swapLeftRight() {
     Pixel[][] pixels = this.getPixels2D();
     Picture result = new Picture(this);
     Pixel[][] resultPixels = result.getPixels2D();
-    
-    for (int row = 0; row<this.getHeight(); row++) {
-        for (int col = 0; col<this.getWidth(); col++) {
-            int newCol = (col+this.getWidth()/2)%this.getWidth(); 
+    int width = this.getWidth();
+    int height = this.getHeight();
+    int halfWidth = width / 2;
+
+    for (int row = 0; row < height; row++) {
+        for (int col = 0; col < width; col++) {
+            int newCol = (col + halfWidth) % width; 
             resultPixels[row][newCol].setColor(pixels[row][col].getColor()); 
         }
     }
@@ -101,13 +196,16 @@ public class Picture extends SimplePicture
     Pixel[][] pixels = this.getPixels2D();
     Picture result = new Picture(this);
     Pixel[][] resultPixels = result.getPixels2D();
+    int width = this.getWidth();
+    int height = this.getHeight();
+    int stepHeight = height / steps;
 
-    for (int row = 0; row<this.getHeight(); row++) {
-        int stepNum = row/(this.getHeight()/steps);
-        int shift = (stepNum*shiftCount)%this.getWidth();
+    for (int row = 0; row < height; row++) {
+        int stepNumber = row / stepHeight;
+        int shift = (stepNumber * shiftCount) % width;
 
-        for (int col = 0; col<this.getWidth(); col++) {
-            int newCol = (col+shift)%this.getWidth(); 
+        for (int col = 0; col < width; col++) {
+            int newCol = (col + shift) % width; 
             resultPixels[row][newCol].setColor(pixels[row][col].getColor()); 
         }
     }
@@ -115,22 +213,23 @@ public class Picture extends SimplePicture
     return result;
   }
 
-
   public Picture wavy(int amplitude) {
     Pixel[][] pixels = this.getPixels2D();
     Picture result = new Picture(this);
     Pixel[][] resultPixels = result.getPixels2D();
-    
+    int width = this.getWidth();
+    int height = this.getHeight();
+
     double frequency = 0.01;
     double phase = 0; 
 
-    for (int row = 0; row<this.getHeight(); row++) {
-        int shift = (int) (amplitude*Math.sin(2*Math.PI*frequency*row+phase));
+    for (int row = 0; row < height; row++) {
+        int shift = (int) (amplitude * Math.sin(2*Math.PI*frequency * row + phase));
         
-        for (int col = 0; col<this.getWidth(); col++) {
+        for (int col = 0; col < width; col++) {
             int newCol = col + shift;
 
-            newCol = ((newCol%this.getWidth())+this.getWidth())%this.getWidth();
+            newCol = ((newCol % width) + width) % width;
             
             resultPixels[row][newCol].setColor(pixels[row][col].getColor());
         }
@@ -332,7 +431,7 @@ public class Picture extends SimplePicture
     }
   }
 
-  public void grayscale() {
+  public void greyscale() {
     Pixel[][] pixels = this.getPixels2D();
     for (Pixel[] rowArray : pixels) {
       for (Pixel pixelObj : rowArray) {
