@@ -171,6 +171,7 @@ public class PictureTester
     testEdgeDetectionBelow(12);
     testGreenScreen();
     testRotate(Math.PI/6);
+    testRotate(Math.PI/4);
     //testKeepOnlyRed();
     //testKeepOnlyGreen();
     //testNegate();
