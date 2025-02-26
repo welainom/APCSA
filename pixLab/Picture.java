@@ -92,41 +92,37 @@ public class Picture extends SimplePicture
     int width = pixels[0].length;
     int height = pixels.length;
 
-    // Calculate new dimensions for the rotated image
     int newWidth = (int) Math.round(Math.abs(width * Math.cos(angle)) + Math.abs(height * Math.sin(angle)));
     int newHeight = (int) Math.round(Math.abs(width * Math.sin(angle)) + Math.abs(height * Math.cos(angle)));
 
     Picture result = new Picture(newHeight, newWidth);
     Pixel[][] resultPixels = result.getPixels2D();
 
-    // Find the center of the original and new images
+    
     int cx = width / 2;
     int cy = height / 2;
     int newCx = newWidth / 2;
     int newCy = newHeight / 2;
 
-    // Apply rotation for each pixel
+    
     for (int y0 = 0; y0 < height; y0++) {
       for (int x0 = 0; x0 < width; x0++) {
-        // Convert pixel coordinates relative to the original center
+        
         int x_rel = x0 - cx;
         int y_rel = y0 - cy;
 
-        // Apply rotation formulas
         int x1 = (int) Math.round(x_rel * Math.cos(angle) - y_rel * Math.sin(angle)) + newCx;
         int y1 = (int) Math.round(x_rel * Math.sin(angle) + y_rel * Math.cos(angle)) + newCy;
 
-        // Check if the new coordinates are within bounds
         if (x1 >= 0 && x1 < newWidth && y1 >= 0 && y1 < newHeight) {
             resultPixels[y1][x1].setColor(pixels[y0][x0].getColor());
         }
       }
     }
 
-    // Fill missing pixels using nearest-neighbor interpolation
     for (int i = 1; i < newHeight - 1; i++) {
       for (int j = 1; j < newWidth - 1; j++) {
-        if (resultPixels[i][j].getColor().equals(Color.WHITE)) { // Assuming empty pixels are black
+        if (resultPixels[i][j].getColor().equals(Color.WHITE)) { 
             int new_r = (resultPixels[i + 1][j].getRed() + resultPixels[i - 1][j].getRed() +
             resultPixels[i][j + 1].getRed() + resultPixels[i][j - 1].getRed()) / 4;
             int new_g = (resultPixels[i + 1][j].getGreen() + resultPixels[i - 1][j].getGreen() +
@@ -260,26 +256,25 @@ public class Picture extends SimplePicture
   /** Method to show large changes in color 
   * @param edgeDist the distance for finding edges
   */
-  public void edgeDetectionBelow(int edgeDist)
+  public Picture edgeDetectionBelow(int threshold)
   {
-    Pixel leftPixel = null;
-    Pixel downPixel = null;
     Pixel[][] pixels = this.getPixels2D();
-    Color downColor = null;
-    for (int row = 0; row < pixels.length - 1; row++)
-    {
-      for (int col = 0; 
-            col < pixels[0].length; col++)
-      {
-        leftPixel = pixels[row][col];
-        downPixel = pixels[row+1][col];
-        downColor = downPixel.getColor();
-        if (leftPixel.colorDistance(downColor) > edgeDist)
-          leftPixel.setColor(Color.BLACK);
-        else
-          leftPixel.setColor(Color.WHITE);
+    Picture result = new Picture(pixels.length, pixels[0].length);
+    Pixel[][] resultPixels = result.getPixels2D(); 
+
+    for (int i = 0; i<pixels.length - 1; i++) {
+      for (int j = 0 ;j<pixels[0].length; j++) {
+        Pixel down = pixels[i + 1][j];
+
+        if (pixels[i][j].colorDistance(down.getColor()) < threshold) {
+          resultPixels[i][j].setColor(Color.WHITE);
+        }
+        else {
+          resultPixels[i][j].setColor(Color.BLACK);
+        }
       }
     }
+    return result;
   }
 
   /** Method to set the blue to 0 */
