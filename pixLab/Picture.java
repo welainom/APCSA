@@ -89,46 +89,46 @@ public class Picture extends SimplePicture
    */
   public Picture rotate(double angle) {
     Pixel[][] pixels = this.getPixels2D();
-    int width = pixels[0].length;
-    int height = pixels.length;
 
-    int newWidth = (int) Math.round(Math.abs(width * Math.cos(angle)) + Math.abs(height * Math.sin(angle)));
-    int newHeight = (int) Math.round(Math.abs(width * Math.sin(angle)) + Math.abs(height * Math.cos(angle)));
+    // calculate the new width and height
+    int newWidth = (int)Math.round(Math.abs(pixels[0].length * Math.cos(angle))+Math.abs(pixels.length * Math.sin(angle)));
+    int newHeight = (int)Math.round(Math.abs(pixels[0].length * Math.sin(angle))+Math.abs(pixels.length * Math.cos(angle)));
 
     Picture result = new Picture(newHeight, newWidth);
     Pixel[][] resultPixels = result.getPixels2D();
 
+    // centers of images
+    int cx = pixels[0].length/2;
+    int cy = pixels.length/2;
+    int newCx = newWidth/2;
+    int newCy = newHeight/2;
     
-    int cx = width / 2;
-    int cy = height / 2;
-    int newCx = newWidth / 2;
-    int newCy = newHeight / 2;
+    for (int y0 = 0; y0<pixels.length; y0++) {
+      for (int x0 = 0; x0<pixels[0].length; x0++) {
 
-    
-    for (int y0 = 0; y0 < height; y0++) {
-      for (int x0 = 0; x0 < width; x0++) {
-        
-        int x_rel = x0 - cx;
-        int y_rel = y0 - cy;
+        // calculate the new x and y position of the original pixel
+        int x1 = (int) Math.round((x0-cx) * Math.cos(angle)-(y0-cy) * Math.sin(angle))+newCx;
+        int y1 = (int) Math.round((x0-cx) * Math.sin(angle)+(y0-cy) * Math.cos(angle))+newCy;
 
-        int x1 = (int) Math.round(x_rel * Math.cos(angle) - y_rel * Math.sin(angle)) + newCx;
-        int y1 = (int) Math.round(x_rel * Math.sin(angle) + y_rel * Math.cos(angle)) + newCy;
-
-        if (x1 >= 0 && x1 < newWidth && y1 >= 0 && y1 < newHeight) {
+        // if in bounds, set it
+        if (x1>=0 && x1<newWidth && y1>=0 && y1<newHeight) {
             resultPixels[y1][x1].setColor(pixels[y0][x0].getColor());
         }
       }
     }
 
-    for (int i = 1; i < newHeight - 1; i++) {
-      for (int j = 1; j < newWidth - 1; j++) {
+    // fill in the empty pixels based on average of surrounding
+    for (int i = 1; i<newHeight-1; i++) {
+      for (int j = 1; j<newWidth-1; j++) {
         if (resultPixels[i][j].getColor().equals(Color.WHITE)) { 
-            int new_r = (resultPixels[i + 1][j].getRed() + resultPixels[i - 1][j].getRed() +
-            resultPixels[i][j + 1].getRed() + resultPixels[i][j - 1].getRed()) / 4;
-            int new_g = (resultPixels[i + 1][j].getGreen() + resultPixels[i - 1][j].getGreen() +
-            resultPixels[i][j + 1].getGreen() + resultPixels[i][j - 1].getGreen()) / 4;
-            int new_b = (resultPixels[i + 1][j].getBlue() + resultPixels[i - 1][j].getBlue() +
-            resultPixels[i][j + 1].getBlue() + resultPixels[i][j - 1].getBlue()) / 4;
+
+            // average the red, green, blue values
+            int new_r = (resultPixels[i+1][j].getRed() + resultPixels[i-1][j].getRed() +
+            resultPixels[i][j+1].getRed() + resultPixels[i][j-1].getRed()) / 4;
+            int new_g = (resultPixels[i+1][j].getGreen() + resultPixels[i-1][j].getGreen() +
+            resultPixels[i][j+1].getGreen() + resultPixels[i][j-1].getGreen()) / 4;
+            int new_b = (resultPixels[i+1][j].getBlue() + resultPixels[i-1][j].getBlue() +
+            resultPixels[i][j+1].getBlue() + resultPixels[i][j-1].getBlue()) / 4;
 
             resultPixels[i][j].setColor(new Color(new_r, new_g, new_b));
         }
@@ -146,27 +146,31 @@ public class Picture extends SimplePicture
     Pixel[][] bkgndPixels = bkgnd.getPixels2D();
     // Get cat picture
     Picture cat = new Picture("greenScreenImages/kitten1GreenScreen.jpg");
-    Pixel[][] catPixels = cat.getPixels2D(); // 410 43
+    cat = cat.scale(0.75, 0.75);
+    Pixel[][] catPixels = cat.getPixels2D(); 
     // Get mouse picture
     Picture mouse = new Picture("greenScreenImages/mouse1GreenScreen.jpg");
+    mouse = mouse.scale(0.75, 0.75);
     Pixel[][] mousePixels = mouse.getPixels2D();
 
+    // for each cat pixel, if it is not green, set the background pixel to it
     for (int i = 0; i<catPixels.length; i++) {
       for (int j = 0; j<catPixels[0].length; j++) {
         if ((catPixels[i][j].getGreen() < 195) ||  (catPixels[i][j].getBlue() > 200)) {
-          bkgndPixels[i + 300][j + 300].setColor(catPixels[i][j].getColor());
+          bkgndPixels[i + 400][j + 300].setColor(catPixels[i][j].getColor());
         }
       }
     }
 
+    // for each mouse pixel, if it is not green, set the background pixel to it.
     for (int i = 0; i<mousePixels.length; i++) {
       for (int j = 0; j<mousePixels[0].length; j++) {
         if ((mousePixels[i][j].getRed() > 100)) {
-          bkgndPixels[i + 275][j + 500].setColor(mousePixels[i][j].getColor());
+          bkgndPixels[i + 300][j + 500].setColor(mousePixels[i][j].getColor());
         }
       }
     }
-    System.out.println(catPixels.length + " " + catPixels[0].length);
+    
     return bkgnd;
   }
 
@@ -266,6 +270,7 @@ public class Picture extends SimplePicture
       for (int j = 0 ;j<pixels[0].length; j++) {
         Pixel down = pixels[i + 1][j];
 
+        // if the pixel is far enough from the pixel below, set it to white
         if (pixels[i][j].colorDistance(down.getColor()) < threshold) {
           resultPixels[i][j].setColor(Color.WHITE);
         }
