@@ -28,7 +28,7 @@ public class PictureTester
 
   public static void testEdgeDetectionBelow(int edgeDist) {
     Picture beach = new Picture("images/swan.jpg");
-    beach.edgeDetectionBelow(edgeDist);
+    beach = beach.edgeDetectionBelow(edgeDist);
     beach.explore();
   }
 
@@ -145,7 +145,7 @@ public class PictureTester
   public static void testEdgeDetection()
   {
     Picture swan = new Picture("images/swan.jpg");
-    swan.edgeDetection(10);
+    swan.edgeDetection(15);
     swan.explore();
   }
   
@@ -168,9 +168,9 @@ public class PictureTester
     //testStairStep(1, 400);
     // testLiquify(100);
     // testWavy(100);
-    testEdgeDetectionBelow(15);
+    testEdgeDetectionBelow(12);
     testGreenScreen();
-    testRotate(Math.PI/4);
+    testRotate(Math.PI/6);
     //testKeepOnlyRed();
     //testKeepOnlyGreen();
     //testNegate();
