@@ -1,144 +1,205 @@
-import java.time.chrono.IsoEra;
-import java.util.List;		// used by expression evaluator
 import java.util.ArrayList;
+import java.util.List;  // Used by expression evaluator
+import java.util.EmptyStackException;
 
 /**
- *	<Description goes here>
+ * A simple calculator that supports arithmetic operations and variable assignments.
  *
- *	@author		William Liu
- *	@since		3/5/25
+ * @author 
+ * @since 
  */
 public class SimpleCalc {
-	
-	private ExprUtils utils;	// expression utilities
-	
-	private ArrayStack<Double> valueStack;		// value stack
-	private ArrayStack<String> operatorStack;	// operator stack
+    private ExprUtils utils; // Expression utilities
+    private ArrayStack<Double> valueStack; // Stack for storing values
+    private ArrayStack<String> operatorStack; // Stack for storing operators
+    private ArrayList<Identifier> ids; // List of all stored variables
+    private int index = 0; // Current token index
 
-	// constructor	
-	public SimpleCalc() {
-		utils = new ExprUtils();
-		valueStack = new ArrayStack<Double>();
-		operatorStack = new ArrayStack<String>();
-	}
-	
-	public static void main(String[] args) {
-		SimpleCalc sc = new SimpleCalc();
-		sc.run();
-	}
-	
-	public void run() {
-		System.out.println("\nWelcome to SimpleCalc!!!");
-		runCalc();
-		System.out.println("\nThanks for using SimpleCalc! Goodbye.\n");
-	}
-	
-	/**
-	 *	Prompt the user for expressions, run the expression evaluator,
-	 *	and display the answer.
-	 */
-	public void runCalc() {
-		boolean run = true;
-		while (run) {
-			List<String> tokens = utils.tokenizeExpression(Prompt.getString(""));
-			System.out.println(evaluateExpression(tokens));
-		}
-	}
-	
-	/**	Print help */
-	public void printHelp() {
-		System.out.println("Help:");
-		System.out.println("  h - this message\n  q - quit\n");
-		System.out.println("Expressions can contain:");
-		System.out.println("  integers or decimal numbers");
-		System.out.println("  arithmetic operators +, -, *, /, %, ^");
-		System.out.println("  parentheses '(' and ')'");
-	}
-	
-	/**
-	 *	Evaluate expression and return the value
-	 *	@param tokens	a List of String tokens making up an arithmetic expression
-	 *	@return			a double value of the evaluated expression
-	 */
-	public double evaluateExpression(List<String> tokens) {
-		double value = 0;
-		
-		for (int i = 0; i<tokens.size(); i++) {
-			String cur = tokens.get(i);
-			double num = -1.0;
+    // Constructor
+    public SimpleCalc() {
+        utils = new ExprUtils();
+        ids = new ArrayList<>();
+        valueStack = new ArrayStack<>();
+        operatorStack = new ArrayStack<>();
+        
+        // Initialize constants e and pi
+        ids.add(new Identifier("e", Math.E));
+        ids.add(new Identifier("pi", Math.PI));
+    }
 
-			if (cur.compareTo("0") >= 0 && cur.compareTo("9") <= 9) {
-				num = Double.parseDouble(cur);
-				valueStack.push(num);
+    /** Main Method */
+    public static void main(String[] args) {
+        SimpleCalc sc = new SimpleCalc();
+        sc.run();
+    }
+
+    /** Runs the calculator and handles user input */
+    public void run() {
+        System.out.println("Welcome to SimpleCalc!!!\n");
+        runCalc();
+        System.out.println("\nThanks for using SimpleCalc! Goodbye.\n");
+    }
+
+    /** Handles user input and processes expressions */
+    public void runCalc() {
+        String exp = Prompt.getString("");
+        while (!exp.equals("q")) {
+            List<String> tokensToPass = utils.tokenizeExpression(exp);
+
+            if (exp.equals("h")) {
+                printHelp();
+            } else if (exp.equals("l")) {
+                listVariables();
+            } else if (exp.contains("=")) {
+                processAssignment(tokensToPass);
+            } else {
+                System.out.println(evaluateExpression(tokensToPass));
+            }
+
+            exp = Prompt.getString("");
+        }
+    }
+
+    /** Handles variable assignment */
+    private void processAssignment(List<String> tokens) {
+        String name = tokens.get(0);
+        tokens.remove(0);
+        tokens.remove(0); // Remove "="
+
+        boolean isValid = true;
+		for (int i = 0; i < name.length(); i++) {
+			if (!Character.isLetter(name.charAt(i))) {
+				isValid = false;
 			}
-			else {
-				if (operatorStack.isEmpty()) {
-					operatorStack.push(cur);
+		}
+
+		if (!isValid) {
+			System.out.println("0.0");
+			return;
+		}
+
+
+        if (name.equals("e") || name.equals("pi")) {
+            System.out.println("Cannot modify constant: " + name);
+            return;
+        }
+
+        double value = evaluateExpression(tokens);
+        Identifier id = new Identifier(name, value);
+        
+        boolean exists = false;
+        for (int i = 0; i < ids.size(); i++) {
+            if (ids.get(i).getName().equals(name)) {
+                ids.set(i, id);
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            ids.add(id);
+        }
+        System.out.println(name + " = " + value);
+    }
+
+    /** Evaluates an arithmetic expression */
+    public double evaluateExpression(List<String> tokens) {
+        valueStack = new ArrayStack<>();
+        operatorStack = new ArrayStack<>();
+        index = 0;
+
+        while (index < tokens.size()) {
+			String token = tokens.get(index);
+			System.out.println("Processing token: " + token); // Debugging line		
+            if (token.equals(")")) {
+                while (!operatorStack.isEmpty() && !operatorStack.peek().equals("(")) {
+                    performOperation();
+                }
+                if (!operatorStack.isEmpty()) {
+                    operatorStack.pop();
+                }
+            } else if (utils.isOperator(token.charAt(0))) {
+                while (!operatorStack.isEmpty() && hasPrecedence(token, operatorStack.peek())) {
+                    performOperation();
+                }
+                operatorStack.push(token);
+            } else {
+                valueStack.push(getValue(token));
+            }
+            index++;
+        }
+
+        while (!operatorStack.isEmpty()) {
+            performOperation();
+        }
+        return valueStack.isEmpty() ? 0.0 : valueStack.pop();
+    }
+
+    /** Gets the numeric value of a token (either a variable or a number) */
+    private double getValue(String token) {
+		if (Character.isLetter(token.charAt(0))) {
+			for (Identifier id : ids) {
+				if (id.getName().equals(token)) {
+					return id.getValue();
 				}
-				else {
-					if (hasPrecedence(operatorStack.peek(), cur)) {
-						operatorStack.push(cur);
-					}
-					else {
-						double a = valueStack.pop(), b = valueStack.pop();
-						String op = operatorStack.pop();
-
-						if (op.equals("+")) {
-							valueStack.push(a + b);
-						}
-						if (op.equals("-")) {
-							valueStack.push(a - b);
-						}
-					}
-				}
 			}
+			// Return 0.0 if the variable is undefined
+			return 0.0;
 		}
-
-		boolean done = valueStack.isEmpty() && operatorStack.isEmpty();
-		while (!done) {
-			double a = valueStack.pop(), b = valueStack.pop();
-			String op = operatorStack.pop();
-			
-			if (op.equals("+")) {
-				valueStack.push(a + b);
-			}
-			if (op.equals("-")) {
-				valueStack.push(a - b);
-			}
-			if (op.equals("*")) {
-				valueStack.push(a * b);
-			}
-			if (op.equals("/")) {
-				valueStack.push(a / b);
-			}
-			
-			done = valueStack.isEmpty() && operatorStack.isEmpty();
-		}
-
-		value = valueStack.pop();
-
-		return value;
+		return Double.parseDouble(token);
 	}
 	
-	/**
-	 *	Precedence of operators
-	 *	@param op1	operator 1
-	 *	@param op2	operator 2
-	 *	@return		true if op2 has higher or same precedence as op1; false otherwise
-	 *	Algorithm:
-	 *		if op1 is exponent, then false
-	 *		if op2 is either left or right parenthesis, then false
-	 *		if op1 is multiplication or division or modulus and 
-	 *				op2 is addition or subtraction, then false
-	 *		otherwise true
-	 */
-	private boolean hasPrecedence(String op1, String op2) {
-		if (op1.equals("^")) return false;
-		if (op2.equals("(") || op2.equals(")")) return false;
-		if ((op1.equals("*") || op1.equals("/") || op1.equals("%")) 
-				&& (op2.equals("+") || op2.equals("-")))
-			return false;
-		return true;
-	}
-	 
+
+    /** Performs an operation using the top two values in the stack */
+    private void performOperation() {
+        if (valueStack.isEmpty() || operatorStack.isEmpty()) return;
+        double val1 = valueStack.pop();
+        if (valueStack.isEmpty()) {
+            valueStack.push(val1);
+            return;
+        }
+        double val2 = valueStack.pop();
+        String op = operatorStack.pop();
+        valueStack.push(doOperations(val1, val2, op));
+    }
+
+    /** Prints the list of stored variables */
+    private void listVariables() {
+        System.out.println("\nVariables:");
+        for (Identifier id : ids) {
+            System.out.printf("%-18s = %8.2f\n", id.getName(), id.getValue());
+        }
+        System.out.println();
+    }
+
+    /** Performs arithmetic operations */
+    private double doOperations(double val1, double val2, String operator) {
+        switch (operator) {
+            case "+": return val2 + val1;
+            case "-": return val2 - val1;
+            case "*": return val2 * val1;
+            case "/": return val2 / val1;
+            case "^": return Math.pow(val2, val1);
+            case "%": return val2 % val1;
+            default: return 0;
+        }
+    }
+
+    /** Checks operator precedence */
+    private boolean hasPrecedence(String op1, String op2) {
+        if (op1.equals("^")) return false;
+        if (op2.equals("(") || op2.equals(")")) return false;
+        if ((op1.equals("*") || op1.equals("/") || op1.equals("%")) && (op2.equals("+") || op2.equals("-"))) return false;
+        return true;
+    }
+
+    /** Prints help message */
+    public void printHelp() {
+        System.out.println("Help:");
+        System.out.println("  h - this message\n  q - quit\n");
+        System.out.println("Expressions can contain:");
+        System.out.println("  integers or decimal numbers");
+        System.out.println("  arithmetic operators +, -, *, /, %, ^");
+        System.out.println("  parentheses '(' and ')'");
+    }
 }
