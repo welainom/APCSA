@@ -8,21 +8,17 @@ import java.awt.Color;
 
 
 /**
- * The Boulder is similar to a Rock, but it explodes after some time
- * Turns red right before it explodes, and then followed by Kaboom
- * @author Harshil Dalal
- * @since Apr 30, 2023
+ * @author  William Liu
+ * @since   3/26/25
  */
-public class Boulder extends Actor
-{
+public class Boulder extends Actor {
     private int lifetime; //lifespan of boulder
     private final int THRESHOLD = 3; //to set color to red
 
     /**
      * constructor, sets color null and lifetime random
      */
-    public Boulder()
-    {
+    public Boulder() {
         setColor(null);
         lifetime = (int)(Math.random()*200)+1; //1-200
     }
@@ -30,10 +26,9 @@ public class Boulder extends Actor
     /**
      * constructor, sets color null and lifetime based on input
      */
-    public Boulder(int lifetime2)
-    {
+    public Boulder(int lifetime) {
         setColor(null);
-        lifetime = lifetime2;
+        this.lifetime = lifetime;
     }
 
     /**
@@ -42,15 +37,13 @@ public class Boulder extends Actor
      * Or set red when lifetime is less than threshold
      * Lifetime continues to decrease with each call
      */
-    public void act()
-    {
-        if(lifetime == 0)
-        {
+    public void act() {
+        if(lifetime == 0) {
             Location loc = getLocation();
             Kaboom kaboom = new Kaboom();
             kaboom.putSelfInGrid(getGrid(), loc);
-        } else if(lifetime < THRESHOLD)
-        {
+        } 
+        else if(lifetime < THRESHOLD) {
             setColor(Color.RED);
         }
         lifetime--;

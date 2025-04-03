@@ -10,14 +10,10 @@ import java.util.ArrayList;
 import java.awt.Color;
 
 /**
- * A coyote The Coyote drops Stones as he wanders around the grid
- * He moves in straight lines, but stops every couple steps to drop a
- * stone and change direction.
- * @author Harshil Dalal
- * @since Apr 30, 2023
+ * @author  William Liu
+ * @since   3/26/25
  */
-public class Coyote extends Critter
-{
+public class Coyote extends Critter {
     private int steps; //steps taken by coyote
     private int sleep; //tracking when to sleep -- helping variable
     private boolean isWall; //checks if wall is present
@@ -25,8 +21,7 @@ public class Coyote extends Critter
     /**
      * constructor, sets default values for variables and fields
      */
-    public Coyote()
-    {
+    public Coyote() {
         setColor(null);
         steps = 5;
         sleep = 5;
@@ -42,22 +37,17 @@ public class Coyote extends Critter
      * --> Accordingly places a boulder in empty adjacent locaiton based on that
      */
     public void act() {
-
-        if (steps < 0)
-        {
+        if (steps < 0) {
             steps++;
             return;
         }
 
-        if (steps == 0)
-        {
+        if (steps == 0) {
             int dir = ((int)(Math.random()*360/45));
             setDirection( dir * 45 );
-            if (isWall == false)
-            {
+            if (isWall == false) {
                 ArrayList<Location> locations = getGrid().getEmptyAdjacentLocations(getLocation());
-                if (locations.size() != 0)
-                {
+                if (locations.size() != 0) {
                     Location stoneLocation = locations.get((int)(Math.random() * locations.size()));
                     Stone st = new Stone();
                     st.putSelfInGrid(getGrid(), stoneLocation);
@@ -67,24 +57,22 @@ public class Coyote extends Critter
 
         Location nextLoc = getLocation().getAdjacentLocation(getDirection());
         Grid<Actor> gr = getGrid();
-        if (!gr.isValid(nextLoc) || gr.get(nextLoc) != null)
-        {
+        if (!gr.isValid(nextLoc) || gr.get(nextLoc) != null) {
             steps = -5;
             sleep = -5;
-            if (!gr.isValid(nextLoc))
-            {
+            if (!gr.isValid(nextLoc)) {
                 isWall = true;
             }
             else {
                 isWall = false;
             }
 
-            if (gr.isValid(nextLoc) && gr.get(nextLoc) instanceof Boulder)
-            {
+            if (gr.isValid(nextLoc) && gr.get(nextLoc) instanceof Boulder) {
                 removeSelfFromGrid();
                 return;
             }
-        } else {
+        } 
+        else {
             steps++;
             sleep++;
             if (steps == 6) {

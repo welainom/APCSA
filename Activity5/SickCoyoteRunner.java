@@ -17,7 +17,7 @@ public class SickCoyoteRunner
 	 */
     public static void main(String[] args)
     {
-        BoundedGrid<Actor> sGrid = new BoundedGrid<Actor>(5, 5);
+        BoundedGrid<Actor> sGrid = new BoundedGrid<Actor>(10, 10);
         ActorWorld world = new ActorWorld(sGrid);
 
 		world.add(new Location(2, 2), new SickCoyote(2));

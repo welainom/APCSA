@@ -16,8 +16,6 @@
  * @author Barbara Cloud Wells
  */
 
-
-
 import info.gridworld.grid.BoundedGrid;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
@@ -29,22 +27,15 @@ import java.awt.Color;
 
 
 /**
- * A Roadrunner moves at most three spaces away in a randomized direction
- * It can bump into Boulders and Coyotes
- * A coyote that is bumped into will become a SickCoyote.
- * If the Roadrunner bumps into a Boulder, it will explode and the Roadrunner
- * will be eliminated
- * @author Harshil Dalal
- * @since Apr 30, 2023
+ * @author 	William Liu
+ * @since 	3/26/25
  */
-public class RR extends Critter
-{
+public class RR extends Critter {
 
 	/**
 	 * constructor, sets color null
 	 */
-	public RR()
-	{
+	public RR() {
 		setColor(null);
 	}
 
@@ -60,28 +51,23 @@ public class RR extends Critter
         int[] directions = {Location.NORTH, Location.NORTH, Location.NORTHEAST,
             Location.EAST, Location.SOUTHEAST, Location.SOUTH, Location.SOUTHWEST, 
             Location.WEST, Location.NORTHWEST};
-        for (int dir : directions)
-        {
+        for (int dir : directions) {
             Location loc = getLocation();
-            for (int step = 0; step < 3; ++step)
-            {
+            for (int step = 0; step < 3; ++step) {
                 Location next = loc.getAdjacentLocation(dir);
 
-                if (gr.isValid(next))
-                {
-					if ((gr.get(next) == null || gr.get(next) instanceof Boulder || gr.get(next) instanceof Coyote))
-					{
+                if (gr.isValid(next)) {
+					if ((gr.get(next) == null || gr.get(next) instanceof Boulder || gr.get(next) instanceof Coyote)) {
 						moveLocs.add(next);
 					}
-					if (gr.get(next) != null)
-					{
+					if (gr.get(next) != null) {
 						step = 3;
 					}
                 } 
-                else
-				{
+                else {
 					step = 3;
 				}
+
                 loc = next;
             }
         }
@@ -94,24 +80,20 @@ public class RR extends Critter
 	 * will be removed from the grid.
 	 * @param 		the location to move to
 	 */
-	public void makeMove(Location loc)
-    {
+	public void makeMove(Location loc) {
 		Grid<Actor> gr = getGrid();
-        if (loc == null)
-        {
+        if (loc == null) {
             removeSelfFromGrid();
             return;
 		}
-        else if (gr.get(loc) instanceof Boulder)
-        {
+        else if (gr.get(loc) instanceof Boulder) {
 			Kaboom kaboom = new Kaboom();
 			kaboom.putSelfInGrid(gr, loc);
 			removeSelfFromGrid();
 
 			return;
 		}
-		else if (gr.get(loc) instanceof Coyote)
-		{
+		else if (gr.get(loc) instanceof Coyote) {
 			SickCoyote sck = new SickCoyote();
 			ArrayList<Location> adj = gr.getValidAdjacentLocations(loc);
 			if (!adj.isEmpty())

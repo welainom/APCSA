@@ -9,11 +9,12 @@ public class CoyoteRunner
 {
     public static void main(String[] args)
     {
-        BoundedGrid<Actor> mygrid = new BoundedGrid<Actor>(10,10);
+        BoundedGrid<Actor> mygrid = new BoundedGrid<Actor>(15,15);
         ActorWorld world = new ActorWorld(mygrid);
 
         world.add(new Location(3, 7), new Coyote());
         world.add(new Location(4, 4), new Coyote());
+        world.add(new Location(10, 10), new Coyote());
         world.show();
     }
 }
