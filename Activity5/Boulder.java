@@ -16,7 +16,7 @@ public class Boulder extends Actor {
 
     public Boulder() {
         setColor(null);
-        lifetime = (int)(Math.random()*200)+1; //1-200
+        lifetime = (int) (Math.random() * 200) + 1; 
     }
 
     public Boulder(int lifetime) {
