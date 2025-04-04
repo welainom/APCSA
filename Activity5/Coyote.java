@@ -14,72 +14,76 @@ import java.awt.Color;
  * @since   3/26/25
  */
 public class Coyote extends Critter {
-    private int steps; //steps taken by coyote
-    private int sleep; //tracking when to sleep -- helping variable
-    private boolean isWall; //checks if wall is present
+    private int steps;
+    private int sleep; 
+    private boolean isWall; 
 
-    /**
-     * constructor, sets default values for variables and fields
-     */
     public Coyote() {
+
+        // Set fields to the default methods
         setColor(null);
         steps = 5;
         sleep = 5;
         isWall = true;
-        int dir = ((int)(Math.random()*360/45));
-        setDirection( dir * 45 );
+
+        // Random direction 
+        int dir = ((int) (Math.random() * 360 / 45));
+        setDirection(dir * 45);
     }
 
-    /**
-     * act method determining coyote behavior
-     * When the coyote should sleep, wake up
-     * Also considers if coyote hit a wall before waking up
-     * --> Accordingly places a boulder in empty adjacent locaiton based on that
-     */
     public void act() {
+        // Increment steps if negative because of cooldown
         if (steps < 0) {
             steps++;
             return;
         }
-
+    
+        // Choose a new direction
         if (steps == 0) {
-            int dir = ((int)(Math.random()*360/45));
-            setDirection( dir * 45 );
-            if (isWall == false) {
+            setDirection((int)(Math.random() * 8) * 45);
+    
+            if (!isWall) {
                 ArrayList<Location> locations = getGrid().getEmptyAdjacentLocations(getLocation());
-                if (locations.size() != 0) {
+                if (!locations.isEmpty()) {
+                    // Select random location and put stone
                     Location stoneLocation = locations.get((int)(Math.random() * locations.size()));
                     Stone st = new Stone();
                     st.putSelfInGrid(getGrid(), stoneLocation);
                 }
             }
         }
-
+    
+        // Determine next location
         Location nextLoc = getLocation().getAdjacentLocation(getDirection());
         Grid<Actor> gr = getGrid();
+    
+        // Check if location is invalid or occupied
         if (!gr.isValid(nextLoc) || gr.get(nextLoc) != null) {
+            // Cooldown
             steps = -5;
             sleep = -5;
-            if (!gr.isValid(nextLoc)) {
-                isWall = true;
-            }
-            else {
-                isWall = false;
-            }
-
+    
+            // If it hit a wall
+            isWall = !gr.isValid(nextLoc);
+    
+            // If the next location contains a Boulder, remove from the grid
             if (gr.isValid(nextLoc) && gr.get(nextLoc) instanceof Boulder) {
                 removeSelfFromGrid();
                 return;
             }
         } 
         else {
+            // Move forward
             steps++;
             sleep++;
+    
+            // Reset steps 
             if (steps == 6) {
                 steps = 0;
                 isWall = false;
             }
+    
             moveTo(nextLoc);
         }
-    }
+    }    
 }

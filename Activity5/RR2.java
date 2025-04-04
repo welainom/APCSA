@@ -5,123 +5,126 @@ import info.gridworld.actor.Critter;
 import java.util.ArrayList;
 
 /**
- * RR is the RoadRunner that can move very fast. It only dies when hitting a boulder and can move up to three steps at a time
- * Important to note that the RR MUST have a clear path to the actor that is within three steps
- * @author Aaryan Doshi
- * @since May 1, 2023
+ * @author 	William Liu
+ * @since 	3/26/25
  */
-
-
-public class RR2 extends Critter
-{
-
-    /*Initialize the color of the RR to be null and initial direction as North*/
-    public RR2()
-    {
+public class RR2 extends Critter {
+    public RR2() {
         setColor(null);
         setDirection(Location.NORTH);
     }
 
-    /**
-     * Performing the behavior of a RoadRunner. Checking cells within three, determining the actors at those location, and accordingly make decision
-     */
-    public void act()
-    {
-
+    public void act() {
         Location loc = getLocation();
-        ArrayList<Location> possibleLocations = new ArrayList<Location>();
-        /*Get initial starting and ending locations for cells within three*/
+        ArrayList<Location> locs = new ArrayList<Location>();
+        
+        // The square around the RR
         int startRow = loc.getRow() - 3;
         int endRow = loc.getRow() + 3;
+        
         int startCol = loc.getCol() - 3;
         int endCol = loc.getCol() + 3;
+
         Grid<Actor> gr = getGrid();
 
-        for(int i = startRow; i <= endRow; i++){
-            for(int j = startCol; j <= endCol; j++){
-                Location awayLoc = new Location(i, j);
-                /*Make sure that the location is in bounds*/
-                if(gr.isValid(awayLoc)){
-                    /*RR can only go to that location if its empty, a Boulder, or a Coyote*/
-                    Actor actor = gr.get(awayLoc);
-                    if(actor == null || actor instanceof Boulder || actor instanceof Coyote){
+        // Each location in the square
+        for(int i = startRow; i <= endRow; i++) {
+            for(int j = startCol; j <= endCol; j++) {
+                Location curLoc = new Location(i, j);
 
-                        /*IMPORTANT to note that there should be CLEAR PATH. Below I consider all possible squares
-                          boulders, coyotes, null. But I ensure there is nothing between this square and the Road Runner*/
+                // only if its valid
+                if(gr.isValid(curLoc)) {
+                    Actor actor = gr.get(curLoc);
 
-                        /*4 Different Cases as Shown below. (2 * 2) because of conditions for rows and cols*/
-                        if(loc.getRow() > awayLoc.getRow() && loc.getCol() < awayLoc.getCol()){
-                            Location loc1 = new Location(i+1, j-1);
-                            Location loc2 = new Location(i+2, j-2);
-                            Location loc3 = new Location(i+3, j-3);
+                    // Targets that are empty, a Boulder, or a Coyote
+                    if(actor == null || actor instanceof Boulder || actor instanceof Coyote) {
+                        
+                        // All possible locs in the diagonals
+                        Location loc1 = new Location(i + 1, j - 1);
+                        Location loc2 = new Location(i + 2, j - 2);
+                        Location loc3 = new Location(i + 3, j - 3);
+                        Location loc4 = new Location(i + 1, j + 1);
+                        Location loc5 = new Location(i + 2, j + 2);
+                        Location loc6 = new Location(i + 3, j + 3);
+                        Location loc7 = new Location(i + 1, j + 1);
+                        Location loc8 = new Location(i + 2, j + 2);
+                        Location loc9 = new Location(i + 3, j + 3);
+                        Location loc10 = new Location(i + 1, j + 1);
+                        Location loc11 = new Location(i + 2, j + 2);
+                        Location loc12 = new Location(i + 3, j + 3);
 
-                            /*Ok, I got three location BUT maybe they arent a distance of three away, hence the following conditions*/
-                            /*SAME Logic Applied in Below Code as well*/
-
-                            if(gr.isValid(loc1) && !gr.isValid(loc2) && !gr.isValid(loc3)){
-                                if(gr.get(loc1) == null) possibleLocations.add(awayLoc);
+                        // Clear diagonal path between current location and target
+                        // Check all four diagonal directions
+                        if(loc.getRow() > curLoc.getRow() && loc.getCol() < curLoc.getCol()) {
+                            // Check all three and add them to locs if they are valid
+                            if(gr.isValid(loc1) && !gr.isValid(loc2) && !gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null) {
+                                    locs.add(curLoc);
+                                }
                             }
-
-                            else if(gr.isValid(loc1) && gr.isValid(loc2) && !gr.isValid(loc3)){
-                                if(gr.get(loc1) == null && gr.get(loc2) == null) possibleLocations.add(awayLoc);
+                            else if(gr.isValid(loc1) && gr.isValid(loc2) && !gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null && gr.get(loc2) == null) {
+                                    locs.add(curLoc);
+                                }
                             }
-
-                            else if(gr.isValid(loc1) && gr.isValid(loc2) && gr.isValid(loc3)){
-                                if(gr.get(loc1) == null && gr.get(loc2) == null & gr.get(loc3) == null) possibleLocations.add(awayLoc);
-                            }
-                        }
-
-                        else if(loc.getRow() > awayLoc.getRow() && loc.getCol() > awayLoc.getCol()){
-                            Location loc1 = new Location(i+1, j+1);
-                            Location loc2 = new Location(i+2, j+2);
-                            Location loc3 = new Location(i+3, j+3);
-
-                            if(gr.isValid(loc1) && !gr.isValid(loc2) && !gr.isValid(loc3)){
-                                if(gr.get(loc1) == null) possibleLocations.add(awayLoc);
-                            }
-
-                            else if(gr.isValid(loc1) && gr.isValid(loc2) && !gr.isValid(loc3)){
-                                if(gr.get(loc1) == null && gr.get(loc2) == null) possibleLocations.add(awayLoc);
-                            }
-
-                            else if(gr.isValid(loc1) && gr.isValid(loc2) && gr.isValid(loc3)){
-                                if(gr.get(loc1) == null && gr.get(loc2) == null & gr.get(loc3) == null) possibleLocations.add(awayLoc);
+                            else if(gr.isValid(loc1) && gr.isValid(loc2) && gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null && gr.get(loc2) == null & gr.get(loc3) == null) {
+                                    locs.add(curLoc);
+                                }
                             }
                         }
-
-                        else if(loc.getRow() < awayLoc.getRow() && loc.getCol() > awayLoc.getCol()){
-                            Location loc1 = new Location(i-1, j+1);
-                            Location loc2 = new Location(i-2, j+2);
-                            Location loc3 = new Location(i-3, j+3);
-
-                            if(gr.isValid(loc1) && !gr.isValid(loc2) && !gr.isValid(loc3)){
-                                if(gr.get(loc1) == null) possibleLocations.add(awayLoc);
+                        else if(loc.getRow() > curLoc.getRow() && loc.getCol() > curLoc.getCol()) {
+                            // Check all three and add them to locs if they are valid
+                            if(gr.isValid(loc1) && !gr.isValid(loc2) && !gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null) {
+                                    locs.add(curLoc);
+                                }
                             }
-
-                            else if(gr.isValid(loc1) && gr.isValid(loc2) && !gr.isValid(loc3)){
-                                if(gr.get(loc1) == null && gr.get(loc2) == null) possibleLocations.add(awayLoc);
+                            else if(gr.isValid(loc1) && gr.isValid(loc2) && !gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null && gr.get(loc2) == null) {
+                                    locs.add(curLoc);
+                                }
                             }
-
-                            else if(gr.isValid(loc1) && gr.isValid(loc2) && gr.isValid(loc3)){
-                                if(gr.get(loc1) == null && gr.get(loc2) == null & gr.get(loc3) == null) possibleLocations.add(awayLoc);
+                            else if(gr.isValid(loc1) && gr.isValid(loc2) && gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null && gr.get(loc2) == null & gr.get(loc3) == null) {
+                                    locs.add(curLoc);
+                                }
                             }
                         }
-
-                        else if(loc.getRow() < awayLoc.getRow() && loc.getCol() < awayLoc.getCol()){
-                            Location loc1 = new Location(i-1, j-1);
-                            Location loc2 = new Location(i-2, j-2);
-                            Location loc3 = new Location(i-3, j-3);
-
-                            if(gr.isValid(loc1) && !gr.isValid(loc2) && !gr.isValid(loc3)){
-                                if(gr.get(loc1) == null) possibleLocations.add(awayLoc);
+                        else if(loc.getRow() < curLoc.getRow() && loc.getCol() > curLoc.getCol()) {
+                            // Check all three and add them to locs if they are valid
+                            if(gr.isValid(loc1) && !gr.isValid(loc2) && !gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null) {
+                                    locs.add(curLoc);
+                                }
                             }
-
-                            else if(gr.isValid(loc1) && gr.isValid(loc2) && !gr.isValid(loc3)){
-                                if(gr.get(loc1) == null && gr.get(loc2) == null) possibleLocations.add(awayLoc);
+                            else if(gr.isValid(loc1) && gr.isValid(loc2) && !gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null && gr.get(loc2) == null) {
+                                    locs.add(curLoc);
+                                }
                             }
-
-                            else if(gr.isValid(loc1) && gr.isValid(loc2) && gr.isValid(loc3)){
-                                if(gr.get(loc1) == null && gr.get(loc2) == null & gr.get(loc3) == null) possibleLocations.add(awayLoc);
+                            else if(gr.isValid(loc1) && gr.isValid(loc2) && gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null && gr.get(loc2) == null & gr.get(loc3) == null) {
+                                    locs.add(curLoc);
+                                }
+                            }
+                        }
+                        else if(loc.getRow() < curLoc.getRow() && loc.getCol() < curLoc.getCol()) {
+                            // Check all three and add them to locs if they are valid
+                            if(gr.isValid(loc1) && !gr.isValid(loc2) && !gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null) {
+                                    locs.add(curLoc);
+                                }
+                            }
+                            else if(gr.isValid(loc1) && gr.isValid(loc2) && !gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null && gr.get(loc2) == null) {
+                                    locs.add(curLoc);
+                                }
+                            }
+                            else if(gr.isValid(loc1) && gr.isValid(loc2) && gr.isValid(loc3)) {
+                                if(gr.get(loc1) == null && gr.get(loc2) == null & gr.get(loc3) == null) {
+                                    locs.add(curLoc);
+                                }
                             }
                         }
                     }
@@ -129,43 +132,36 @@ public class RR2 extends Critter
             }
         }
 
-        /*Get a random actor from all of the possible locations in arraylist*/
-        /*In case no locations are available, have this condition*/
-        if(possibleLocations.size() != 0){
+        // Pick a random one and act on it
+        if(locs.size() != 0) {
+            int rand = (int)(Math.random() * locs.size());
+            Location randLoc = locs.get(rand);
+            Actor collision = getGrid().get(randLoc);
 
-            int randIndex = (int)(Math.random() * possibleLocations.size());
-            Location randLoc = possibleLocations.get(randIndex);
-            Actor actorMet = getGrid().get(randLoc);
-
-            /*When coming across a boulder, make it explode. Remove the roadrunner from the grid*/
-            if(actorMet instanceof Boulder){
-                Kaboom obj = new Kaboom();
-                obj.putSelfInGrid(gr, actorMet.getLocation());
+            if(collision instanceof Boulder) {
+                // Collision with boulder causes a Kaboom
+                Kaboom kaboom = new Kaboom();
+                kaboom.putSelfInGrid(gr, collision.getLocation());
                 removeSelfFromGrid();
             }
-
-            /*When coming across a Coyote, remove the coyote, replace it with RR, add sickCoyote in random adjacent location*/
-            else if(actorMet instanceof Coyote){
-                /*Location of the coyote*/
-                Location currActorLocation = actorMet.getLocation();
-                actorMet.removeSelfFromGrid();
+            else if(collision instanceof Coyote) {
+                // Collision with Coyote creates a sick coyote
+                Location loc2 = collision.getLocation();
+                collision.removeSelfFromGrid();
                 removeSelfFromGrid();
-                /*replacing the coyote with an RR*/
-                putSelfInGrid(gr, currActorLocation);
-                /*Get a list of all adjacent locations to coyote*/
-                ArrayList<Location> adjLocations = getGrid().getEmptyAdjacentLocations(currActorLocation);
-                int randIndex2 = (int)(Math.random() * adjLocations.size());
-                Location newLoc = adjLocations.get(randIndex2);
-                SickCoyote obj2  = new SickCoyote();
-                /*place sick coyote in a random, adjacent, empty, location*/
-                obj2.putSelfInGrid(gr, newLoc);
-            }
+                putSelfInGrid(gr, loc2);
 
-            /*otherwise just move to the random location*/
-            else{
+                ArrayList<Location> adj = getGrid().getEmptyAdjacentLocations(loc2);
+                int rand2 = (int)(Math.random() * adj.size());
+
+                Location newLoc = adj.get(rand2);
+                SickCoyote sick  = new SickCoyote();
+
+                sick.putSelfInGrid(gr, newLoc);
+            }
+            else {
                 moveTo(randLoc);
             }
         }
     }
 }
-

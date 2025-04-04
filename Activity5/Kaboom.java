@@ -11,23 +11,17 @@ import java.awt.Color;
  * @since   3/26/25
  */
 public class Kaboom extends Actor {
-    private int lifetime; //lifespan of kaboom
-    private final int THRESHOLD = 3; //threshold of kaboom
+    private int lifetime;
+    private final int THRESHOLD = 3; 
 
-    /**
-     * constructor, sets lifetime to threshold
-     */
     public Kaboom() {
         setColor(null);
         lifetime = THRESHOLD;
     }
 
-    /**
-     * act method for kaboom behavior
-     * Moves itself when lifetime is 0
-     * Lifetime continues decreasing with each method call
-     */
     public void act() {
+
+        // Countdown lifetime and remove when 0
         if(lifetime == 0) {
             removeSelfFromGrid();
         }
