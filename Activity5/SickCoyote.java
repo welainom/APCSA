@@ -7,6 +7,7 @@ import info.gridworld.actor.Critter;
 import java.util.ArrayList;
 import java.awt.Color;
 
+
 /**
  * @author 	William Liu
  * @since 	3/26/25
@@ -15,7 +16,7 @@ public class SickCoyote extends Actor {
 	private int lifetime;				
 	private final int THRESHOLD = 10;	
 
-	// In both constructors set fields to default 
+	// Sets to all the default values
 	public SickCoyote() {
 		setColor(null);
 		lifetime = THRESHOLD;
@@ -28,7 +29,7 @@ public class SickCoyote extends Actor {
 	
 	public void act() {
 
-		// If lifetime is 0, turn it into a new coyote
+		// When lifetime reaches 0 replace with a normal coyote
 		if (lifetime == 0) {
 			Coyote coyote = new Coyote();
 			coyote.putSelfInGrid(getGrid(), getLocation());
