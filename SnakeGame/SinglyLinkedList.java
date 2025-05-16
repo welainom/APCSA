@@ -35,159 +35,15 @@ public class SinglyLinkedList<E extends Comparable<E>> {
             }
         }
     }
-
+    
     public void clear() {
         head = null;
         tail = null;
         size = 0;
     }
     
-    /**
-     * 	Add the object to the end of the list
-    */
-    public boolean add(E obj) {
-        ListNode<E> node = new ListNode<E>(obj);
-        
-        // If the list is empty set head and tail to node
-        if (head == null) {
-            head = node;
-            tail = node;
-        }
-        
-        // Otherwise add node after the current tail
-        else {
-            tail.setNext(node);
-            tail = node;
-        }
-        
-        size++; 
-        return true;
-    }
-    
-    /**
-     * 	Add the object at the specified index
-    */
-    public boolean add(int index, E obj) {
-        if (index < 0 || index > size) throw new NoSuchElementException();
-
-        ListNode<E> node = new ListNode<E>(obj);
-        
-        // If adding at the beginning of the list
-        if (index == 0) {
-            node.setNext(head);
-            head = node;
-            
-            if (tail == null)
-            {
-                tail = node;
-            }
-        }
-        
-        else if (index == size) {
-            tail.setNext(node);
-            tail = node;
-        }
-        
-        else {
-            ListNode<E> prev = head;
-        
-            for (int i = 0; i < index - 1; i++) {
-                prev = prev.getNext();
-            }
-            
-            node.setNext(prev.getNext());
-            prev.setNext(node);
-        }
-
-        size++;
-        
-        return true;
-    }
-    
     public int size() {
         return size;
-    }
-    
-    /**
-     * 	Return the ListNode at the specified index
-    */
-    public ListNode<E> get(int index) {
-        if(index < 0 || index >= size) throw new NoSuchElementException();
-
-        ListNode<E> node = head;
-        
-        for(int i = 0; i < index; i++) {
-            node = node.getNext();
-        }
-
-        return node;
-    }
-    
-    /**
-     * 	Replace the object at the specified index
-    */
-    public E set(int index, E obj) {
-        if(index < 0 || index >= size)
-        {
-            throw new NoSuchElementException();
-        }
-    
-        ListNode<E> node = head;
-         
-        for(int i = 0; i < index; i++) {
-            if (node == null) {
-                throw new NoSuchElementException();
-            }
-            
-            node = node.getNext();
-        }
-        
-        // Store the old value before replacing
-        E old = node.getValue();
-        node.setValue(obj);
-        
-        return old;
-    }
-
-    /**
-     * 	Remove the element at the specified index
-    */
-    public E remove(int index) {
-        E val;
-    
-        if (isEmpty() || index < 0 || index >= size) throw new NoSuchElementException();
-        
-
-        // If removing the first element
-        if (index == 0) {
-            val = head.getValue();
-            head = head.getNext();
-            
-            // Update tail if head is null
-            if (head == null) {
-                tail = null;
-            }
-        }
-        else {
-            ListNode<E> prev = head;
-            
-            // Traverse to the node before the specified index
-            for(int i = 0; i < index - 1; i++) {
-                prev = prev.getNext();
-            }
-
-            val = prev.getNext().getValue();
-            prev.setNext(prev.getNext().getNext());
-            
-            // Update tail if removing the last element
-            if (index == size - 1) {
-                tail = prev;
-            }
-        }
-        
-        size--; 
-        
-        return val;
     }
 
     /**
@@ -221,21 +77,161 @@ public class SinglyLinkedList<E extends Comparable<E>> {
     public int indexOf(E obj)
     {
         int index = 0;
-        ListNode<E> curr = head;
+        ListNode<E> cur = head;
         
-        while(curr != null) {
+        while(cur != null) {
             // Traverse the list to find the index of the specified object
-            if(curr.getValue().equals(obj)) {
+            if(cur.getValue().equals(obj)) {
                 return index;
             }
             
-            curr = curr.getNext();
+            cur = cur.getNext();
             index++;
         }
         
         return -1; // Not found in list
     }
     
+    /**
+     * 	Add the object to the end of the list
+    */
+    public boolean add(E obj) {
+        ListNode<E> node = new ListNode<E>(obj);
+        
+        // If the list is empty set head and tail to node
+        if (head == null) {
+            head = node;
+            tail = node;
+        }
+        else {
+            tail.setNext(node);
+            tail = node;
+        }
+        
+        size++; 
+        return true;
+    }
+    
+    /**
+     * 	Add the object at the specified index
+    */
+    public boolean add(int idx, E obj) {
+        if (idx < 0 || idx > size) throw new NoSuchElementException();
+
+        ListNode<E> node = new ListNode<E>(obj);
+        
+        // If adding at the beginning of the list
+        if (idx == 0) {
+            node.setNext(head);
+            head = node;
+            
+            if (tail == null)
+            {
+                tail = node;
+            }
+        }
+        else if (idx == size) {
+            tail.setNext(node);
+            tail = node;
+        }
+        else {
+            ListNode<E> prev = head;
+        
+            for (int i = 0; i < idx - 1; i++) {
+                prev = prev.getNext();
+            }
+            
+            node.setNext(prev.getNext());
+            prev.setNext(node);
+        }
+
+        size++;
+        
+        return true;
+    }
+    
+    /**
+     * 	Return the ListNode at the specified index
+    */
+    public ListNode<E> get(int idx) {
+        if(idx < 0 || idx >= size) throw new NoSuchElementException();
+
+        ListNode<E> node = head;
+        
+        for(int i = 0; i < idx; i++) {
+            node = node.getNext();
+        }
+
+        return node;
+    }
+    
+    /**
+     * 	Replace the object at the specified index
+    */
+    public E set(int idx, E obj) {
+        if(idx < 0 || idx >= size)
+        {
+            throw new NoSuchElementException();
+        }
+    
+        ListNode<E> node = head;
+         
+        for(int i = 0; i < idx; i++) {
+            if (node == null) {
+                throw new NoSuchElementException();
+            }
+            
+            node = node.getNext();
+        }
+        
+        // Store the old value before replacing
+        E old = node.getValue();
+        node.setValue(obj);
+        
+        return old;
+    }
+
+    /**
+     * 	Remove the element at the specified index
+    */
+    public E remove(int idx) {
+        E val;
+    
+        if (isEmpty() || idx < 0 || idx >= size) throw new NoSuchElementException();
+        
+
+        // If removing the first element
+        if (idx == 0) {
+            val = head.getValue();
+            head = head.getNext();
+            
+            // Update tail if head is null
+            if (head == null) {
+                tail = null;
+            }
+        }
+        else {
+            ListNode<E> prev = head;
+            
+            // Traverse to the node before the specified index
+            for(int i = 0; i < idx - 1; i++) {
+                prev = prev.getNext();
+            }
+
+            val = prev.getNext().getValue();
+            prev.setNext(prev.getNext().getNext());
+            
+            // Update tail if removing the last element
+            if (idx == size - 1) {
+                tail = prev;
+            }
+        }
+        
+        size--; 
+        
+        return val;
+    }
+
     public void printList() {
         ListNode<E> ptr = head;
         while(ptr != null)
