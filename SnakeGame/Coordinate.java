@@ -37,11 +37,12 @@ public class Coordinate implements Comparable<Coordinate>
     */
    public int compareTo(Coordinate c) {
        if (! (c instanceof Coordinate)) throw new IllegalArgumentException("compareTo not Coordinate object");
-       if (x > ((Coordinate) c).x || x < ((Coordinate) c).x) return x - ((Coordinate) c).x;
        if (y > ((Coordinate) c).y || y < ((Coordinate) c).y) return y - ((Coordinate) c).y;
+       if (x > ((Coordinate) c).x || x < ((Coordinate) c).x) return x - ((Coordinate) c).x;
        return 0;
    }
    
-   public String toString()
-   {    return "[ " + x+ ", " + y     + "]";  }
+   public String toString() {
+      return "[ " + x+ ", " + y     + "]";  
+   }
 }
