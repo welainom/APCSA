@@ -34,9 +34,9 @@ public class SnakeGame {
 	 * Runs the game. Loops until game over
 	 */
 	public void run() {
-		boolean run = true; 
 		printIntroduction();
 		
+		boolean run = true; 
 		while (run) {
 			board.printBoard(snake, tgt); 
 			run = moved(); 
