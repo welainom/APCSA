@@ -1,158 +1,117 @@
 /**
- * Binary Tree of Comparable values.
- * The tree only has unique values. It does not add duplicate values.
- * 
- * @author	William Liu
- * @since	5/16/25
+ *	Binary Tree of Comparable values.
+ *	The tree only has unique values. It does not add duplicate values.
+ *	
+ *	@author	
+ *	@since	
  */
-import java.util.List;
-import java.util.ArrayList;
-
 public class BinaryTree<E extends Comparable<E>> {
 
-	private TreeNode<E> root; // the root of the tree
+	private TreeNode<E> root;		// the root of the tree
 	
-	private final int PRINT_SPACES = 3; // print spaces between tree levels
+	private final int PRINT_SPACES = 3;	// print spaces between tree levels
+										// used by printTree()
 	
-	/** constructor for BinaryTree */
+	/**	constructor for BinaryTree */
 	public BinaryTree() { }
-
-	/** Add a node to the tree (both iterative and recursive versions) */
-	public void add(E value) {
-		// Iterative implementation
-		if (root == null) {
-			root = new TreeNode<>(value);
-			return;
-		}
-		TreeNode<E> current = root;
-		while (true) {
-			int cmp = value.compareTo(current.getValue());
-			if (cmp < 0) {
-				if (current.getLeft() == null) {
-					current.setLeft(new TreeNode<>(value));
-					return;
-				}
-				current = current.getLeft();
-			} else if (cmp > 0) {
-				if (current.getRight() == null) {
-					current.setRight(new TreeNode<>(value));
-					return;
-				}
-				current = current.getRight();
-			} else {
-				return; // duplicate value, do nothing
-			}
-		}
-	}
-
-	/** Recursive version of add */
-	public void addRecursive(E value) {
-		root = addRecursive(root, value);
-	}
-
-	private TreeNode<E> addRecursive(TreeNode<E> node, E value) {
-		if (node == null) return new TreeNode<>(value);
-		int cmp = value.compareTo(node.getValue());
-		if (cmp < 0) node.setLeft(addRecursive(node.getLeft(), value));
-		else if (cmp > 0) node.setRight(addRecursive(node.getRight(), value));
-		return node;
-	}
-
-	/** Print Binary Tree Inorder */
-	public void printInorder() {
-		printInorder(root);
-		System.out.println();
-	}
-
-	private void printInorder(TreeNode<E> node) {
-		if (node == null) return;
-		printInorder(node.getLeft());
-		System.out.print(node.getValue() + " ");
-		printInorder(node.getRight());
-	}
-
-	/** Print Binary Tree Preorder */
-	public void printPreorder() {
-		printPreorder(root);
-		System.out.println();
-	}
-
-	private void printPreorder(TreeNode<E> node) {
-		if (node == null) return;
-		System.out.print(node.getValue() + " ");
-		printPreorder(node.getLeft());
-		printPreorder(node.getRight());
-	}
-
-	/** Print Binary Tree Postorder */
-	public void printPostorder() {
-		printPostorder(root);
-		System.out.println();
-	}
-
-	private void printPostorder(TreeNode<E> node) {
-		if (node == null) return;
-		printPostorder(node.getLeft());
-		printPostorder(node.getRight());
-		System.out.print(node.getValue() + " ");
-	}
-
-	/** Return a balanced version of this binary tree */
+	
+	/**	Field accessors and modifiers */
+	
+	/**	Add a node to the tree
+	 *	@param value		the value to put into the tree
+	 */
+	public void add(E value) { }
+	
+	/**
+	 *	Print Binary Tree Inorder
+	 */
+	public void printInorder() { }
+	
+	/**
+	 *	Print Binary Tree Preorder
+	 */
+	public void printPreorder() { }
+	
+	/**
+	 *	Print Binary Tree Postorder
+	 */
+	public void printPostorder() { }
+		
+	/**	Return a balanced version of this binary tree
+	 *	@return		the balanced tree
+	 */
 	public BinaryTree<E> makeBalancedTree() {
-		BinaryTree<E> balancedTree = new BinaryTree<>();
-		List<E> sortedList = new ArrayList<>();
-		fillInorderList(root, sortedList);
-		balancedTree.root = buildBalancedTree(sortedList, 0, sortedList.size() - 1);
+		BinaryTree<E> balancedTree = new BinaryTree<E>();
+
 		return balancedTree;
 	}
-
-	private void fillInorderList(TreeNode<E> node, List<E> list) {
-		if (node == null) return;
-		fillInorderList(node.getLeft(), list);
-		list.add(node.getValue());
-		fillInorderList(node.getRight(), list);
-	}
-
-	private TreeNode<E> buildBalancedTree(List<E> list, int start, int end) {
-		if (start > end) return null;
-		int mid = (start + end) / 2;
-		TreeNode<E> node = new TreeNode<>(list.get(mid));
-		node.setLeft(buildBalancedTree(list, start, mid - 1));
-		node.setRight(buildBalancedTree(list, mid + 1, end));
-		return node;
-	}
-
-	/** Remove value from Binary Tree */
+	
+	/**
+	 *	Remove value from Binary Tree
+	 *	@param value		the value to remove from the tree
+	 *	Precondition: value exists in the tree
+	 */
 	public void remove(E value) {
 		root = remove(root, value);
 	}
-
-	/** Remove value from Binary Tree */
+	/**
+	 *	Remove value from Binary Tree
+	 *	@param node			the root of the subtree
+	 *	@param value		the value to remove from the subtree
+	 *	@return				TreeNode that connects to parent
+	 */
 	public TreeNode<E> remove(TreeNode<E> node, E value) {
-		if (node == null) return null;
-		int cmp = value.compareTo(node.getValue());
-		if (cmp < 0) node.setLeft(remove(node.getLeft(), value));
-		else if (cmp > 0) node.setRight(remove(node.getRight(), value));
-		else {
-			if (node.getLeft() == null) return node.getRight();
-			if (node.getRight() == null) return node.getLeft();
-			TreeNode<E> successor = node.getRight();
-			while (successor.getLeft() != null) successor = successor.getLeft();
-			node = new TreeNode<>(successor.getValue(), node.getLeft(), remove(node.getRight(), successor.getValue()));
-		}
-		return node;
+		return null;
 	}
+	
 
-	/********************************* Utilities ***********************************/
+	/*******************************************************************************/	
+	/********************************* Utilities ***********************************/	
+	/*******************************************************************************/	
+	/**
+	 *	Print binary tree
+	 *	@param root		root node of binary tree
+	 *
+	 *	Prints in vertical order, top of output is right-side of tree,
+	 *			bottom is left side of tree,
+	 *			left side of output is root, right side is deepest leaf
+	 *	Example Integer tree:
+	 *			  11
+	 *			/	 \
+	 *		  /		   \
+	 *		5			20
+	 *				  /	  \
+	 *				14	   32
+	 *
+	 *	would be output as:
+	 *
+	 *				 32
+	 *			20
+	 *				 14
+	 *		11
+	 *			5
+	 ***********************************************************************/
 	public void printTree() {
 		printLevel(root, 0);
 	}
-
+	
+	/**
+	 *	Recursive node printing method
+	 *	Prints reverse order: right subtree, node, left subtree
+	 *	Prints the node spaced to the right by level number
+	 *	@param node		root of subtree
+	 *	@param level	level down from root (root level = 0)
+	 */
 	private void printLevel(TreeNode<E> node, int level) {
 		if (node == null) return;
+		// print right subtree
 		printLevel(node.getRight(), level + 1);
+		// print node: print spaces for level, then print value in node
 		for (int a = 0; a < PRINT_SPACES * level; a++) System.out.print(" ");
 		System.out.println(node.getValue());
+		// print left subtree
 		printLevel(node.getLeft(), level + 1);
 	}
+	
+	
 }

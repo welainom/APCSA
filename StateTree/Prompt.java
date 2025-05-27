@@ -1,6 +1,6 @@
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  *	Prompt.java - Uses BufferedReader.
@@ -12,18 +12,14 @@ import java.io.IOException;
  *	data in Linux.
  *
  *	@author	William Liu
- *	@since	September 6, 2024
+ *	@since	September 11th, 2023
  */
 
 public class Prompt
 {
 	// BufferedReader variables
-	private static InputStreamReader streamReader = 
-								new InputStreamReader(System.in);
-	private static BufferedReader bufReader = 
-								new BufferedReader(streamReader);
-	
-		
+	private static InputStreamReader streamReader= new InputStreamReader(System.in);
+	private static BufferedReader buffReader = new BufferedReader(streamReader);
 	/**
 	 *	Prompts user for string of characters and returns the string.
 	 *	@param ask  The prompt line
@@ -33,14 +29,14 @@ public class Prompt
 	{
 		System.out.print(ask + " -> ");
 		String input = "";
-		
-		try {
-			input = bufReader.readLine();
+		try
+		{
+			input = buffReader.readLine();
 		}
-		catch (IOException e) {
-			System.err.println("ERROR: BufferedReader could not read line");
+		catch(IOException e) 
+		{
+			System.err.println("ERROR: BufferedReader could not read line.");
 		}
-		
 		return input;
 	}
 	
@@ -51,18 +47,14 @@ public class Prompt
 	 */
 	public static char getChar (String ask)
 	{
-		String input = "";
-		
-		while (input.length() != 1) {
-			System.out.print(ask + " -> ");
-			try {
-				input = bufReader.readLine();
-			}
-			catch (IOException e) {
-				System.err.println("ERROR: BufferedReader could not read line");
-			}
-		}
-		return input.charAt(0);
+		char ch = ' ';
+		String str = getString(ask);
+		if (str.length() == 0)
+			ch = '\n';
+		else 
+			ch = str.charAt(0);
+	
+		return ch;
 	}
 	
 	/**
@@ -72,20 +64,21 @@ public class Prompt
 	 */
 	public static int getInt (String ask)
 	{
-		int val = 0;
+		int val =0;
 		boolean found = false;
-		while (! found) {
+		while(!found)
+		{
 			String str = getString(ask);
-			
-			try {
+			try 
+			{
 				val = Integer.parseInt(str);
 				found = true;
 			}
-			catch (NumberFormatException e) {
+			catch (NumberFormatException e)
+			{
 				found = false;
 			}
 		}
-		
 		return val;
 	}
 	
@@ -99,11 +92,11 @@ public class Prompt
 	 */
 	public static int getInt (String ask, int min, int max)
 	{
-		int val = 0;
-		do {
-			val = getInt(ask + " (" + min + ", " + max + ")");
+		int val =0;
+		do
+		{
+			val = getInt(ask + " (" + min + ", " + max+ ") ");
 		} while (val < min || val > max);
-		
 		return val;
 	}
 	
@@ -114,20 +107,21 @@ public class Prompt
 	 */
 	public static double getDouble (String ask)
 	{
-		double val = 0;
+		double val = 0.0;
 		boolean found = false;
-		while (! found) {
+		while(!found)
+		{
 			String str = getString(ask);
-			
-			try {
+			try 
+			{
 				val = Double.parseDouble(str);
 				found = true;
 			}
-			catch (NumberFormatException e) {
+			catch (NumberFormatException e)
+			{
 				found = false;
 			}
 		}
-		
 		return val;
 	}
 	
@@ -141,10 +135,10 @@ public class Prompt
 	public static double getDouble (String ask, double min, double max)
 	{
 		double val = 0;
-		do {
-			val = getDouble(ask + " (" + min + ", " + max + ")");
+		do
+		{
+			val = getDouble(ask + " (" + min + ", " + max+ ") ");
 		} while (val < min || val > max);
-		
 		return val;
 	}
 }

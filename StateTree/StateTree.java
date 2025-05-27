@@ -96,33 +96,61 @@ public class StateTree
 								Integer.valueOf(parts[7]), Integer.valueOf(parts[8]));
 			bTree.add(s);
 		}
+		System.out.println("\nData Loaded from states2.txt\n");
 	}
 	
 	public void printList() {
 		bTree.printInorder();
 	}
 
-	/**	Find the node in the tree */
+	/** Find the node in the tree */
 	public void find() {
-		String name = Prompt.getString("Name of state:");
-		find(name, bTree.getRoot());
+		String name = "";
+		boolean run = true;
+		while (!name.equalsIgnoreCase("q")) {
+			name = Prompt.getString("Name of state (q to quit):");
+			
+			if (name.equalsIgnoreCase("q")) run = false;
+			if (run) {
+				String result = find(name, bTree.getRoot());
+				if (result == null) {
+					System.out.println("\n" +name + " not found.\n");
+				} else {
+					System.out.println("\n" + result + "\n");
+				}
+			}
+		}
+		System.out.println("\n");
 	}
 
-	public void find(String name, TreeNode<State> node) {
-		if (node == null) return;
+	public String find(String name, TreeNode<State> node) {
+		if (node == null) return null;
 		if (node.getValue().getName().equalsIgnoreCase(name)) {
-			System.out.println(node.getValue());
-			return;
+			return node.getValue().toString();
 		}
-		find(name, node.getLeft());
-		find(name, node.getRight());
+		
+		// search left
+		String left = find(name, node.getLeft());
+		if (left != null) return left;
+		
+		// search right
+		return find(name, node.getRight());
 	}
 	
 	/** Delete a node */
 	public void delete() {
-		String name = Prompt.getString("Name of state:");
-		State s = new State(name, " ", 0, 0, 0, " ", 0, 0, 0);
-		bTree.remove(s);
+		String name = "";
+		boolean run = true;
+		while (!name.equalsIgnoreCase("q")) {
+			name = Prompt.getString("Name of state (q to quit):");
+
+			if (name.equalsIgnoreCase("q")) run = false;
+			if (run) {
+				State s = new State(name, " ", 0, 0, 0, " ", 0, 0, 0);
+				bTree.remove(s);
+			}
+		}
+		System.out.println("\n");
 	}
 	
 	/**	Returns the number of nodes in the subtree - recursive
@@ -145,9 +173,18 @@ public class StateTree
 	
 	/**	Print the level requested */
 	public void printLevel() {
-		int level = Integer.parseInt(Prompt.getString("Enter level number:"));
-		System.out.println("\nNodes at level " + level + ":");
-		printLevel(bTree.getRoot(), level, 0);
+		int level = 0;
+		boolean run = true;
+		while (level != -1) {
+			level = Integer.parseInt(Prompt.getString("Enter level number (-1 to quit):"));
+			if (level == -1) run = false;
+
+			if (run) {
+				System.out.println("\nNodes at level " + level + ":");
+				printLevel(bTree.getRoot(), level, 0);
+				System.out.println("\n");
+			}
+		}
 		System.out.println("\n");
 	}
 
